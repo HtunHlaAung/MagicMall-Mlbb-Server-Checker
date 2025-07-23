@@ -10,11 +10,11 @@
   </style>
 </head>
 <body>
-  <h1>Mobile Legends ID Checker</h1>
+  <h1>Magic Mall Mobile Legends ID Checker</h1>
   <input type="text" id="idInput" placeholder="Enter User ID">
   <input type="text" id="zoneInput" placeholder="Enter Zone ID">
   <br>
-  <button onclick="checkMLBB()">Check Account</button>
+  <button onclick="checkMLBB()">စစ်ဆေးမည်။❤️</button>
   <div id="result"></div>
 
   <script>
@@ -42,9 +42,9 @@
         const data = await response.json();
         if (data.success && data.data) {
           resultDiv.innerHTML = `
-            ✅ <b>Username:</b> ${data.data.username}<br>
-            🌍 <b>Country:</b> ${data.data.country}<br>
-            🕹 <b>Product:</b> ${data.data.product}
+            ✅ <b>Account Name:</b> ${data.data.username}<br>
+            🌍 <b>Region:</b> ${data.data.country}<br>
+            🕹 <b>Type:</b> ${data.data.product}
           `;
         } else {
           resultDiv.innerHTML = "❌ Account မတွေ့ပါ😢 or error⚠️.";
