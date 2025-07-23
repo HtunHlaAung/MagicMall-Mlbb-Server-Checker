@@ -1,41 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Mobile Legends ID Checker</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MLBB ID Checker</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #f9f9f9;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 40px 20px;
     }
-    input, button {
-      padding: 10px;
-      margin: 5px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+
+    .container {
+      background: #1e2a38;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 100%;
     }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+
     button {
-      background-color: #4CAF50;
+      width: 100%;
+      padding: 12px;
+      background: #00c6ff;
+      background: linear-gradient(to right, #0072ff, #00c6ff);
       color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
       cursor: pointer;
+      transition: 0.3s;
     }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
     #result {
       margin-top: 20px;
-      padding: 15px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      background: #28394d;
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    ul {
+      margin: 10px 0 0 15px;
+      padding: 0;
+    }
+
+    li {
+      list-style: square;
+      margin-bottom: 5px;
+    }
+
+    .error {
+      color: #ff6b6b;
+    }
+
+    .success {
+      color: #38ef7d;
     }
   </style>
 </head>
 <body>
-  <h2>Mobile Legends Account Checker</h2>
-
-  <input type="text" id="ml_id" placeholder="Enter MLBB ID (e.g. 422443287)">
-  <input type="text" id="ml_server" placeholder="Enter Server ID (e.g. 9968)">
-  <button onclick="checkMLID()">Check</button>
-
-  <div id="result"></div>
+  <div class="container">
+    <h2>🔍 MLBB ID Checker</h2>
+    <input type="text" id="ml_id" placeholder="Enter MLBB ID (e.g. 422443287)" />
+    <input type="text" id="ml_server" placeholder="Enter Server ID (e.g. 9968)" />
+    <button onclick="checkMLID()">Check Account</button>
+    <div id="result"></div>
+  </div>
 
   <script>
     async function checkMLID() {
@@ -44,11 +107,11 @@
       const resultDiv = document.getElementById("result");
 
       if (!id || !server) {
-        resultDiv.innerHTML = "<p style='color:red;'>Please enter both ID and Server.</p>";
+        resultDiv.innerHTML = "<p class='error'>⚠️ Please enter both ID and Server.</p>";
         return;
       }
 
-      resultDiv.innerHTML = "Checking...";
+      resultDiv.innerHTML = "⏳ Checking...";
 
       try {
         const response = await fetch(`https://id-game-checker.p.rapidapi.com/mobile-legends/${id}/${server}`, {
@@ -62,29 +125,30 @@
         const data = await response.json();
 
         if (data.error || data.status !== 200) {
-          resultDiv.innerHTML = "<p style='color:red;'>❌ Account not found or invalid.</p>";
+          resultDiv.innerHTML = "<p class='error'>❌ Account not found. Please check ID or server again.</p>";
           return;
         }
 
         const user = data.data;
 
         resultDiv.innerHTML = `
-          <h3>🎮 Username: ${user.username}</h3>
+          <p class='success'>✅ Account Found</p>
+          <p><strong>Username:</strong> ${user.username}</p>
           <p><strong>ID:</strong> ${user.id}</p>
           <p><strong>Server:</strong> ${user.server}</p>
-          <p><strong>Region:</strong> ${user.region}</p>
-          <h4>💎 Shop Events:</h4>
+          <p><strong>Region:</strong> ${user.region || 'N/A'}</p>
+          <h4>💎 Shop Events</h4>
           ${user.shop_events.map(event => `
             <p><strong>${event.title}</strong></p>
             <ul>
               ${event.goods.map(good => `
-                <li>${good.title} - ${good.game_can_buy ? "✅ Available" : "❌ Not Available"}</li>
+                <li>${good.title} - ${good.game_can_buy ? "🟢 Available" : "🔴 Not Available"}</li>
               `).join("")}
             </ul>
           `).join("")}
         `;
       } catch (error) {
-        resultDiv.innerHTML = `<p style='color:red;'>Error: ${error.message}</p>`;
+        resultDiv.innerHTML = `<p class='error'>⚠️ Error: ${error.message}</p>`;
       }
     }
   </script>
