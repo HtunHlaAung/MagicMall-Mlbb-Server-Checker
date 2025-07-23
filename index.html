@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MLBB ID Checker</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 40px 20px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background: #1e2a38;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 100%;
+      animation: fadeIn 1s ease-out;
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      margin-bottom: 15px;
+      border: 2px solid #00c6ff;
+      background: #fff;
+      border-radius: 10px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .quote {
+      background: #2e3e55;
+      border-left: 5px solid #00c6ff;
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      font-style: italic;
+      font-size: 14.5px;
+      opacity: 0.95;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #0072ff, #00c6ff);
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 12px #00c6ff80;
+    }
+
+    #result {
+      margin-top: 20px;
+      background: #28394d;
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 15px;
+      line-height: 1.6;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    ul {
+      margin: 10px 0 0 15px;
+      padding: 0;
+    }
+
+    li {
+      list-style: square;
+      margin-bottom: 5px;
+    }
+
+    .error {
+      color: #ff6b6b;
+    }
+
+    .success {
+      color: #38ef7d;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Logo from GitHub Pages -->
+    <img src="https://tunhlaaung.github.io/Group%2071%20(1).svg" alt="Logo" class="logo" />
+
+    <h2>🔍 MLBB ID Checker</h2>
+    <div class="quote">"Check your Mobile Legends account instantly and securely."</div>
+    <input type="text" id="ml_id" placeholder="Enter MLBB ID (e.g. 422443287)" />
+    <input type="text" id="ml_server" placeholder="Enter Server ID (e.g. 9968)" />
+    <button onclick="checkMLID()">Check Account</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function checkMLID() {
+      const id = document.getElementById("ml_id").value.trim();
+      const server = document.getElementById("ml_server").value.trim();
+      const resultDiv = document.getElementById("result");
+
+      if (!id || !server) {
+        resultDiv.innerHTML = "<p class='error'>⚠️ Please enter both ID and Server.</p>";
+        return;
+      }
+
+      resultDiv.innerHTML = "⏳ Checking...";
+
+      try {
+        const response = await fetch(`https://id-game-checker.p.rapidapi.com/mobile-legends/${id}/${server}`, {
+          method: 'GET',
+          headers: {
+            'X-RapidAPI-Key': 'e5647e31a3msh0bf7adaa8f3c6dap1597b7jsn545dd30bf5f7',
+            'X-RapidAPI-Host': 'id-game-checker.p.rapidapi.com'
+          }
+        });
+
+        const data = await response.json();
+
+        if (data.error || data.status !== 200) {
+          resultDiv.innerHTML = "<p class='error'>❌ Account not found. Please check ID or server again.</p>";
+          return;
+        }
+
+        const user = data.data;
+
+        resultDiv.innerHTML = `
+          <p class='success'>✅ Account Found</p>
+          <p><strong>Username:</strong> ${user.username}</p>
+          <p><strong>ID:</strong> ${user.id}</p>
+          <p><strong>Server:</strong> ${user.server}</p>
+          <p><strong>Region:</strong> ${user.region || 'N/A'}</p>
+          <h4>💎 Shop Events</h4>
+          ${user.shop_events.map(event => `
+            <p><strong>${event.title}</strong></p>
+            <ul>
+              ${event.goods.map(good => `
+                <li>${good.title} - ${good.game_can_buy ? "🟢 Available" : "🔴 Not Available"}</li>
+              `).join("")}
+            </ul>
+          `).join("")}
+        `;
+      } catch (error) {
+        resultDiv.innerHTML = `<p class='error'>⚠️ Error: ${error.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
