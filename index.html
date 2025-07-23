@@ -3,24 +3,50 @@
 <head>
   <title>Mobile Legends ID Checker</title>
   <style>
-    body { font-family: Arial; padding: 20px; background: #f2f2f2; }
-    input, button { padding: 10px; margin: 5px; }
-    #result { margin-top: 20px; background: #fff; padding: 15px; border-radius: 8px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
   </style>
 </head>
 <body>
-  <h2>Mobile Legends ID Checker</h2>
-  <input type="text" id="ml_id" placeholder="Enter ML ID">
-  <input type="text" id="ml_server" placeholder="Enter Server ID">
-  <button onclick="checkMLID()">Check ID</button>
+  <h2>Mobile Legends Account Checker</h2>
+
+  <input type="text" id="ml_id" placeholder="Enter MLBB ID (e.g. 422443287)">
+  <input type="text" id="ml_server" placeholder="Enter Server ID (e.g. 9968)">
+  <button onclick="checkMLID()">Check</button>
 
   <div id="result"></div>
 
   <script>
     async function checkMLID() {
-      const id = document.getElementById("ml_id").value;
-      const server = document.getElementById("ml_server").value;
+      const id = document.getElementById("ml_id").value.trim();
+      const server = document.getElementById("ml_server").value.trim();
       const resultDiv = document.getElementById("result");
+
+      if (!id || !server) {
+        resultDiv.innerHTML = "<p style='color:red;'>Please enter both ID and Server.</p>";
+        return;
+      }
 
       resultDiv.innerHTML = "Checking...";
 
@@ -36,22 +62,29 @@
         const data = await response.json();
 
         if (data.error || data.status !== 200) {
-          resultDiv.innerHTML = "Account not found or error occurred.";
+          resultDiv.innerHTML = "<p style='color:red;'>❌ Account not found or invalid.</p>";
           return;
         }
 
         const user = data.data;
+
         resultDiv.innerHTML = `
-          <b>Username:</b> ${user.username} <br>
-          <b>Region:</b> ${user.region} <br>
-          <b>Shop Events:</b><br>
+          <h3>🎮 Username: ${user.username}</h3>
+          <p><strong>ID:</strong> ${user.id}</p>
+          <p><strong>Server:</strong> ${user.server}</p>
+          <p><strong>Region:</strong> ${user.region}</p>
+          <h4>💎 Shop Events:</h4>
           ${user.shop_events.map(event => `
-            <b>${event.title}</b><br>
-            ${event.goods.map(g => `- ${g.title} (Buy: ${g.game_can_buy ? 'Yes' : 'No'})<br>`).join("")}
-          `).join("<br>")}
+            <p><strong>${event.title}</strong></p>
+            <ul>
+              ${event.goods.map(good => `
+                <li>${good.title} - ${good.game_can_buy ? "✅ Available" : "❌ Not Available"}</li>
+              `).join("")}
+            </ul>
+          `).join("")}
         `;
       } catch (error) {
-        resultDiv.innerHTML = "Fetch failed: " + error.message;
+        resultDiv.innerHTML = `<p style='color:red;'>Error: ${error.message}</p>`;
       }
     }
   </script>
