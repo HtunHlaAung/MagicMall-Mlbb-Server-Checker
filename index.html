@@ -31,6 +31,7 @@
       max-width: 500px;
       width: 100%;
       animation: fadeIn 1s ease-out;
+      text-align: center;
     }
 
     @keyframes fadeIn {
@@ -44,8 +45,15 @@
       }
     }
 
+    .logo {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      margin-bottom: 15px;
+      border: 2px solid #00c6ff;
+    }
+
     h2 {
-      text-align: center;
       margin-bottom: 20px;
     }
 
@@ -119,6 +127,9 @@
 </head>
 <body>
   <div class="container">
+    <!-- Square Logo -->
+    <img src="https://drive.google.com/uc?export=view&id=1k-SbBU_J1tIOeSVHOhpTEThDM5QwLOdH" alt="Logo" class="logo" />
+    
     <h2>🔍 MLBB ID Checker</h2>
     <div class="quote">"Check your Mobile Legends account instantly and securely."</div>
     <input type="text" id="ml_id" placeholder="Enter MLBB ID (e.g. 422443287)" />
