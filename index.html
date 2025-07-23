@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>MagicMall MLBB Server Checker</title>
+  <style>
+    body { font-family: Arial; padding: 20px; text-align: center; }
+    input, button { padding: 10px; margin: 10px; }
+    #result { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Mobile Legends ID Checker</h1>
+  <input type="text" id="idInput" placeholder="Enter User ID">
+  <input type="text" id="zoneInput" placeholder="Enter Zone ID">
+  <br>
+  <button onclick="checkMLBB()">Check Account</button>
+  <div id="result"></div>
+
+  <script>
+    async function checkMLBB() {
+      const id = document.getElementById("idInput").value.trim();
+      const zone = document.getElementById("zoneInput").value.trim();
+      const resultDiv = document.getElementById("result");
+
+      if (!id || !zone) {
+        resultDiv.innerText = "Please enter both ID and Zone ID.";
+        return;
+      }
+
+      resultDiv.innerText = "Checking...";
+
+      try {
+        const response = await fetch(`https://check-id-game.p.rapidapi.com/api/rapid_api/cek_game_ml/${id}/${zone}`, {
+          method: 'GET',
+          headers: {
+            'X-RapidAPI-Key': 'e5647e31a3msh0bf7adaa8f3c6dap1597b7jsn545dd30bf5f7',
+            'X-RapidAPI-Host': 'check-id-game.p.rapidapi.com'
+          }
+        });
+
+        const data = await response.json();
+        if (data.success && data.data) {
+          resultDiv.innerHTML = `
+            ✅ <b>Username:</b> ${data.data.username}<br>
+            🌍 <b>Country:</b> ${data.data.country}<br>
+            🕹 <b>Product:</b> ${data.data.product}
+          `;
+        } else {
+          resultDiv.innerHTML = "❌ Account မတွေ့ပါ😢 or error⚠️.";
+        }
+
+      } catch (error) {
+        console.error(error);
+        resultDiv.innerHTML = "⚠️ Error checking account.";
+      }
+    }
+  </script>
+</body>
+</html>
