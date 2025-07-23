@@ -132,11 +132,11 @@
     <!-- Logo from GitHub Pages -->
     <img src="logo.svg" alt="Logo" class="logo" />
 
-    <h2>🔍 MLBB ID Checker</h2>
+    <h2>🔍 Magic Mall MLBB ID Checker</h2>
     <div class="quote">"Check your Mobile Legends account instantly and securely."</div>
     <input type="text" id="ml_id" placeholder="Enter MLBB ID (e.g. 422443287)" />
     <input type="text" id="ml_server" placeholder="Enter Server ID (e.g. 9968)" />
-    <button onclick="checkMLID()">Check Account</button>
+    <button onclick="checkMLID()">စစ်ဆေးမည် Account</button>
     <div id="result"></div>
   </div>
 
@@ -151,7 +151,7 @@
         return;
       }
 
-      resultDiv.innerHTML = "⏳ Checking...";
+      resultDiv.innerHTML = "⏳ စစ်ဆေးနေပါပြီ...";
 
       try {
         const response = await fetch(`https://id-game-checker.p.rapidapi.com/mobile-legends/${id}/${server}`, {
