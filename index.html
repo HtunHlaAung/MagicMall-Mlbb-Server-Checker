@@ -28,7 +28,7 @@
         return;
       }
 
-      resultDiv.innerText = "Checking...";
+      resultDiv.innerText = "စစ်ဆေးနေပါသည်...";
 
       try {
         const response = await fetch(`https://check-id-game.p.rapidapi.com/api/rapid_api/cek_game_ml/${id}/${zone}`, {
@@ -43,7 +43,7 @@
         if (data.success && data.data) {
           resultDiv.innerHTML = `
             ✅ <b>Account Name:</b> ${data.data.username}<br>
-            🌍 <b>Region:</b> ${data.data.country}<br>
+            🌍 <b>Server:</b> ${data.data.country}<br>
             🕹 <b>Type:</b> ${data.data.product}
           `;
         } else {
