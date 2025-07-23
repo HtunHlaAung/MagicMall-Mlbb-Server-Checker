@@ -1,140 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>MagicMall MLBB Server Checker</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Legends ID Checker</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom right, #e0f7fa, #ffffff);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-      max-width: 400px;
-      width: 100%;
-      text-align: center;
-      animation: fadeIn 0.6s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h1 {
-      font-size: 22px;
-      margin-bottom: 20px;
-      color: #00796b;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      font-size: 16px;
-      transition: border-color 0.3s;
-    }
-
-    input:focus {
-      border-color: #00796b;
-      outline: none;
-    }
-
-    button {
-      background-color: #00796b;
-      color: #fff;
-      border: none;
-      padding: 12px 20px;
-      font-size: 16px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #004d40;
-    }
-
-    #result {
-      margin-top: 20px;
-      padding: 15px;
-      background-color: #f1f8e9;
-      border: 1px solid #c5e1a5;
-      border-radius: 12px;
-      color: #33691e;
-      display: none;
-      text-align: left;
-    }
+    body { font-family: Arial; padding: 20px; background: #f2f2f2; }
+    input, button { padding: 10px; margin: 5px; }
+    #result { margin-top: 20px; background: #fff; padding: 15px; border-radius: 8px; }
   </style>
 </head>
 <body>
+  <h2>Mobile Legends ID Checker</h2>
+  <input type="text" id="ml_id" placeholder="Enter ML ID">
+  <input type="text" id="ml_server" placeholder="Enter Server ID">
+  <button onclick="checkMLID()">Check ID</button>
 
-  <div class="container">
-    <h1>MagicMall MLBB Server Checker</h1>
-    <input type="text" id="idInput" placeholder="Enter User ID">
-    <input type="text" id="zoneInput" placeholder="Enter Zone ID">
-    <button onclick="checkMLBB()">စစ်ဆေးမည် ❤️</button>
-    <div id="result"></div>
-  </div>
+  <div id="result"></div>
 
   <script>
-    async function checkMLBB() {
-      const id = document.getElementById("idInput").value.trim();
-      const zone = document.getElementById("zoneInput").value.trim();
+    async function checkMLID() {
+      const id = document.getElementById("ml_id").value;
+      const server = document.getElementById("ml_server").value;
       const resultDiv = document.getElementById("result");
 
-      if (!id || !zone) {
-        resultDiv.style.display = "block";
-        resultDiv.innerHTML = "⚠️ Please enter both ID and Zone ID.";
-        return;
-      }
-
-      resultDiv.style.display = "block";
-      resultDiv.innerHTML = "🔄 စစ်ဆေးနေပါသည်...";
+      resultDiv.innerHTML = "Checking...";
 
       try {
-        const response = await fetch(`https://check-id-game.p.rapidapi.com/api/rapid_api/cek_game_ml/${id}/${zone}`, {
+        const response = await fetch(`https://id-game-checker.p.rapidapi.com/mobile-legends/${id}/${server}`, {
           method: 'GET',
           headers: {
             'X-RapidAPI-Key': 'e5647e31a3msh0bf7adaa8f3c6dap1597b7jsn545dd30bf5f7',
-            'X-RapidAPI-Host': 'check-id-game.p.rapidapi.com'
+            'X-RapidAPI-Host': 'id-game-checker.p.rapidapi.com'
           }
         });
 
         const data = await response.json();
-        if (data.success && data.data) {
-          resultDiv.innerHTML = `
-            ✅ <b>Account Name:</b> ${data.data.username}<br>
-            🌍 <b>Server:</b> ${data.data.country}<br>
-            🕹 <b>Type:</b> ${data.data.product}
-          `;
-        } else {
-          resultDiv.innerHTML = "❌ Account မတွေ့ပါ 😢 or error ⚠️.";
+
+        if (data.error || data.status !== 200) {
+          resultDiv.innerHTML = "Account not found or error occurred.";
+          return;
         }
 
+        const user = data.data;
+        resultDiv.innerHTML = `
+          <b>Username:</b> ${user.username} <br>
+          <b>Region:</b> ${user.region} <br>
+          <b>Shop Events:</b><br>
+          ${user.shop_events.map(event => `
+            <b>${event.title}</b><br>
+            ${event.goods.map(g => `- ${g.title} (Buy: ${g.game_can_buy ? 'Yes' : 'No'})<br>`).join("")}
+          `).join("<br>")}
+        `;
       } catch (error) {
-        console.error(error);
-        resultDiv.innerHTML = "⚠️ Error checking account.";
+        resultDiv.innerHTML = "Fetch failed: " + error.message;
       }
     }
   </script>
-
 </body>
 </html>
