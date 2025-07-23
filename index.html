@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MagicMall MLBB Server & Double Diamond Checker</title>
+  <title>MLBB ID Checker</title>
   <style>
     * {
       box-sizing: border-box;
@@ -132,11 +132,11 @@
     <!-- Logo from GitHub Pages -->
     <img src="logo.svg" alt="Logo" class="logo" />
 
-    <h2>🔍MagicMall MLBB Server&Double Diamond Checker</h2>
-    <div class="quote">"သင်ဤ Mobile Legends account server နှင့် Double Diamond ရမရဆိုတာကိုစစ်ဆေးနိုင်ပါတယ်။."</div>
-    <input type="text" id="ml_id" placeholder="သင်ဤ MLBB ID (e.g. 123456789)" />
-    <input type="text" id="ml_server" placeholder="သင်ဤ Server ID (e.g. 0000)" />
-    <button onclick="checkMLID()">စစ်ဆေးမည်။❤️</button>
+    <h2>🔍 MLBB ID Checker</h2>
+    <div class="quote">"Check your Mobile Legends account instantly and securely."</div>
+    <input type="text" id="ml_id" placeholder="Enter MLBB ID (e.g. 422443287)" />
+    <input type="text" id="ml_server" placeholder="Enter Server ID (e.g. 9968)" />
+    <button onclick="checkMLID()">Check Account</button>
     <div id="result"></div>
   </div>
 
@@ -147,11 +147,11 @@
       const resultDiv = document.getElementById("result");
 
       if (!id || !server) {
-        resultDiv.innerHTML = "<p class='error'>⚠️ ကျေးဇူးပြု၍ ID နဲ့ ServerIdလေးကိုမှန်အောင်ထည့်ပေးပါ🥺.</p>";
+        resultDiv.innerHTML = "<p class='error'>⚠️ Please enter both ID and Server.</p>";
         return;
       }
 
-      resultDiv.innerHTML = "⏳ စစ်ဆေးနေပါပြီ...";
+      resultDiv.innerHTML = "⏳ Checking...";
 
       try {
         const response = await fetch(`https://id-game-checker.p.rapidapi.com/mobile-legends/${id}/${server}`, {
@@ -165,24 +165,24 @@
         const data = await response.json();
 
         if (data.error || data.status !== 200) {
-          resultDiv.innerHTML = "<p class='error'>❌ Account မတွေ့ပါ. ကျေးဇူးပြု၍ ID ဒါမှမဟုတ် serveridလေးကိုစစ်ပြီးပြန်ထည့်စမ်းပါ။.</p>";
+          resultDiv.innerHTML = "<p class='error'>❌ Account not found. Please check ID or server again.</p>";
           return;
         }
 
         const user = data.data;
 
         resultDiv.innerHTML = `
-          <p class='success'>✅ Account တွေ့ပါပြီ</p>
-          <p><strong>Username:</strong> ${user.အမည်}</p>
-          <p><strong>ID:</strong> ${user.Player id}</p>
-          <p><strong>Server:</strong> ${user.Server}</p>
-          <p><strong>Region:</strong> ${user.Region || 'N/A'}</p>
+          <p class='success'>✅ Account Found</p>
+          <p><strong>Username:</strong> ${user.username}</p>
+          <p><strong>ID:</strong> ${user.id}</p>
+          <p><strong>Server:</strong> ${user.server}</p>
+          <p><strong>Region:</strong> ${user.region || 'N/A'}</p>
           <h4>💎 Shop Events</h4>
           ${user.shop_events.map(event => `
             <p><strong>${event.title}</strong></p>
             <ul>
               ${event.goods.map(good => `
-                <li>${good.title} - ${good.game_can_buy ? "🟢 ရပါသေးတယ်။🥳" : "🔴 မရတော့ပါ။😢"}</li>
+                <li>${good.title} - ${good.game_can_buy ? "🟢 Available" : "🔴 Not Available"}</li>
               `).join("")}
             </ul>
           `).join("")}
