@@ -209,8 +209,8 @@
 
   <div class="container">
     <img src="logo.svg" alt="Logo" class="logo" />
-    <h2>🔍 Magic Mall MLBB ID Checker V1</h2>
-    <div class="quote">"Check your Mobile Legends account instantly and securely."</div>
+    <h2>🔍 Magic Mall GameShop MLBB ID Checker V1</h2>
+<div class="quote" id="typingText"></div>
     <input type="text" id="ml_id" placeholder="MLBB IDထည့်ပါ (e.g. 123456789)" />
     <input type="text" id="ml_server" placeholder="Server ID ထည့်ပါ (e.g. 0000)" />
     <button id="checkBtn">စစ်ဆေးမည်</button>
@@ -396,6 +396,23 @@ function closePopup() {
 window.addEventListener("load", () => {
   setTimeout(showPopup, 3000); // Always show after 3 seconds
 });
+</script>
+<script>
+  const quote = `"မိတ်ဆွေရဲ့ Mobile Legends account server နှင့် double diamond တွေကို လျင်မြန်စွာစစ်ဆေးနိုင်ပါတယ်။"`;
+  const typingElement = document.getElementById("typingText");
+  let i = 0;
+
+  function typeEffect() {
+    if (i < quote.length) {
+      typingElement.innerHTML += quote.charAt(i);
+      i++;
+      setTimeout(typeEffect, 45); // Speed of typing
+    }
+  }
+
+  window.addEventListener("load", () => {
+    setTimeout(typeEffect, 500); // Delay before typing starts
+  });
 </script>
 </body>
 </html>
