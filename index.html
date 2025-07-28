@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -51,41 +51,105 @@
       border-radius: 15px;
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
       white-space: pre-line;
+      text-align: left;
+    }
+
+    .loader {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #00c6ff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #quote {
+      font-size: 1.1rem;
+      color: #ccc;
+      margin-bottom: 25px;
+      min-height: 24px;
+    }
+
+    #telegram {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 10px 20px;
+      background-color: #0088cc;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+
+    #telegram:hover {
+      background-color: #0077b3;
     }
   </style>
 </head>
 <body>
-  <h1>🔍 MLBB ID Checker</h1>
+  <h1>🔍 Magic Mall MLBB ID Checker</h1>
+  <div id="quote"></div>
   <input type="text" id="idInput" placeholder="Enter ID">
   <input type="text" id="serverInput" placeholder="Server">
   <br>
-  <button onclick="checkMLBB()">Check</button>
+  <button id="checkBtn" onclick="checkMLBB()">Check</button>
 
+  <div id="loader" style="display:none;"><div class="loader"></div></div>
   <div id="result"></div>
 
+  <a id="telegram" href="https://t.me/yourchannel" target="_blank">📲 Join our Telegram</a>
+
   <script>
+    // Typing animation
+    const quoteEl = document.getElementById("quote");
+    const quoteText = "MLBB ဂိမ်းအကောင့်အချက်အလက်ကို အမြန်စစ်ဆေးရန်...";
+    let quoteIndex = 0;
+    function typeQuote() {
+      if (quoteIndex < quoteText.length) {
+        quoteEl.innerHTML += quoteText.charAt(quoteIndex);
+        quoteIndex++;
+        setTimeout(typeQuote, 50);
+      }
+    }
+    typeQuote();
+
+    // Sound on click
+    const clickSound = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_b38b4d4c27.mp3");
+
     async function checkMLBB() {
       const id = document.getElementById('idInput').value.trim();
       const server = document.getElementById('serverInput').value.trim();
       const resultDiv = document.getElementById('result');
-      resultDiv.innerText = '🔎 Checking...';
+      const loader = document.getElementById('loader');
+      resultDiv.innerText = '';
+      loader.style.display = 'block';
+      clickSound.play();
 
       if (!id || !server) {
-        resultDiv.innerText = '❗️Please enter both ID and Server.';
+        loader.style.display = 'none';
+        resultDiv.innerText = '❗️ကျေးဇူးပြု၍ ID နှင့် Server ထည့်ပါ။';
         return;
       }
 
       try {
         const res = await fetch(`https://magic-mall-mlbb-id-check-v1.hlaaunghtun68.workers.dev/mobile-legends/${id}/${server}`);
         const data = await res.json();
+        loader.style.display = 'none';
 
         if (data.error || !data.data) {
-          resultDiv.innerText = '❌မတွေ့ပါ';
+          resultDiv.innerText = '❌ မတွေ့ပါ';
           return;
         }
 
         const user = data.data;
-        let output = '✔️Accountတွေ့ပါ\n\n';
+        let output = '✔️Accountတွေ့ပါပြီ\n\n';
         output += `✅️Username: ${user.username || "မသိရ"}\n`;
         output += `🆔️ID: ${user.id}\n`;
         output += `🖥Server: ${user.server}\n`;
@@ -107,7 +171,7 @@
 
         resultDiv.innerText = output;
       } catch (err) {
-        console.error(err);
+        loader.style.display = 'none';
         resultDiv.innerText = '⚠️ Server error. Try again later.';
       }
     }
