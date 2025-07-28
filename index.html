@@ -3,96 +3,157 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Magic Mall MLBB ID Checker</title>
+  <title>Magic Mall MLBB ID Checker v2</title>
+
+  <!-- Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
+  <!-- tsParticles library -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #4facfe, #00f2fe);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    h1 {
-      color: #fff;
-      margin-bottom: 20px;
-      text-shadow: 1px 1px 4px #000;
-    }
-
-    input {
-      padding: 10px;
-      margin: 5px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      width: 250px;
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin-top: 10px;
-      background-color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #ddd;
-    }
-
-    pre {
-      margin-top: 20px;
-      background: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      max-width: 90%;
-      overflow-x: auto;
-      font-size: 14px;
-    }
+    /* Your original styles here (omitted for brevity in this snippet) */
+    /* Copy the entire <style> block from your old code here */
+    /* For the sake of space, I'll keep it the same as you posted */
   </style>
 </head>
 <body>
-  <h1>Magic Mall MLBB ID Checker</h1>
+  
+  <!-- PARTICLES BACKGROUND -->
+  <div id="tsparticles"></div>
 
-  <input type="text" id="idInput" placeholder="Enter MLBB ID" />
-  <input type="text" id="serverInput" placeholder="Enter Server ID" />
-  <button onclick="checkMLID()">Check</button>
-
-  <pre id="result">Waiting for input...</pre>
+  <div class="container">
+    <img src="logo.svg" alt="Logo" class="logo" />
+    <h2>Magic Mall GameShop MLBB ID Checker V2</h2>
+    <div class="quote" id="typingText"></div>
+    <input type="text" id="ml_id" placeholder="MLBB IDထည့်ပါ (e.g. 123456789)" />
+    <input type="text" id="ml_server" placeholder="Server ID ထည့်ပါ (e.g. 0000)" />
+    <button id="checkBtn">စစ်ဆေးမည်</button>
+    <div id="result"></div>
+    <button id="copyBtn">📋 Copy Result</button>
+    <div id="copyMsg">✅ Copied to clipboard!</div>
+  </div>
 
   <script>
-    function checkMLID() {
-      const id = document.getElementById('idInput').value.trim();
-      const server = document.getElementById('serverInput').value.trim();
-      const resultBox = document.getElementById('result');
+    // Initialize particles
+    tsParticles.load("tsparticles", {
+      fullScreen: { enable: false },
+      background: { color: { value: "transparent" } },
+      fpsLimit: 60,
+      particles: {
+        number: { value: 50 },
+        color: { value: "#00c6ff" },
+        shape: { type: "circle" },
+        opacity: { value: 0.3 },
+        size: { value: 3 },
+        move: {
+          enable: true,
+          speed: 1.5,
+          direction: "none",
+          outModes: { default: "bounce" }
+        }
+      },
+      interactivity: {
+        events: {
+          onHover: { enable: true, mode: "repulse" },
+          resize: true
+        },
+        modes: {
+          repulse: { distance: 70, duration: 0.4 }
+        }
+      },
+      detectRetina: true
+    });
+
+    const clickSound = new Audio("clicksound.mp3");
+    document.getElementById("checkBtn").onclick = () => {
+      clickSound.play();
+      checkMLID();
+    };
+
+    async function checkMLID() {
+      const id = document.getElementById("ml_id").value.trim();
+      const server = document.getElementById("ml_server").value.trim();
+      const resultDiv = document.getElementById("result");
+      const copyBtn = document.getElementById("copyBtn");
+      const copyMsg = document.getElementById("copyMsg");
+
+      copyBtn.style.display = "none";
+      copyMsg.style.display = "none";
 
       if (!id || !server) {
-        resultBox.innerText = '❗ Please enter both ID and Server ID.';
+        resultDiv.innerHTML = "<p class='error'>⚠️ Please enter both ID and Server.</p>";
         return;
       }
 
-      const url = `https://magic-mall-mlbb-id-check-v1.hlaaunghtun68.workers.dev/mobile-legends/${id}/${server}`;
-      resultBox.innerText = '⏳ Checking...';
+      resultDiv.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center;">
+          <div class="loader"></div>
+          <p style="margin-top:10px;">⏳ စစ်ဆေးနေပါပြီ...</p>
+        </div>
+      `;
 
-      fetch(url)
-        .then(response => {
-          if (!response.ok) throw new Error('Network response was not ok');
-          return response.json();
-        })
-        .then(data => {
-          resultBox.innerText = JSON.stringify(data, null, 2);
-        })
-        .catch(error => {
-          console.error('Fetch error:', error);
-          resultBox.innerText = '❌ Error fetching data. Please check the ID and try again.';
-        });
+      try {
+        // IMPORTANT: Change this URL to your Cloudflare Worker URL:
+        const workerUrl = `https://magic-mall-mlbb-id-check-v1.hlaaunghtun68.workers.dev/mobile-legends/${id}/${server}`;
+
+        const response = await fetch(workerUrl);
+
+        if (!response.ok) {
+          resultDiv.innerHTML = "<p class='error'>❌ Server returned an error. Please check the ID and Server.</p>";
+          return;
+        }
+
+        const data = await response.json();
+
+        // Your previous logic expects data.data, user, shop_events
+        if (!data.data) {
+          resultDiv.innerHTML = "<p class='error'>❌ Account မတွေ့ပါ. Id နှင့် Server ID ကို စစ်ပါ။</p>";
+          return;
+        }
+
+        const user = data.data;
+
+        resultDiv.innerHTML = `
+          <p class='success'>✅ Account တွေ့ပါပြီ</p>
+          <p><strong>Username:</strong> ${user.username}</p>
+          <p><strong>ID:</strong> ${user.id}</p>
+          <p><strong>Server:</strong> ${user.server}</p>
+          <p><strong>Region:</strong> ${user.region || 'N/A'}</p>
+          <h4 style="margin-top: 20px;">💎 Shop Events</h4>
+          ${user.shop_events.map(event => `
+            <div style="margin-bottom: 10px;">
+              <strong>${event.title}</strong>
+              <ul>
+                ${event.goods.map(good => `
+                  <li>${good.title} - ${good.game_can_buy ? "🟢 ရပါသေးတယ်" : "🔴 မရတော့ပါ"}</li>
+                `).join("")}
+              </ul>
+            </div>
+          `).join("")}
+        `;
+
+        copyBtn.style.display = "inline-block";
+
+      } catch (error) {
+        resultDiv.innerHTML = `<p class='error'>⚠️ Error: ${error.message}</p>`;
+      }
     }
+
+    // Copy Function
+    document.getElementById("copyBtn").onclick = () => {
+      const resultText = document.getElementById("result").innerText;
+      navigator.clipboard.writeText(resultText).then(() => {
+        const msg = document.getElementById("copyMsg");
+        msg.style.display = "block";
+        setTimeout(() => { msg.style.display = "none"; }, 2000);
+      });
+    };
   </script>
+
+  <!-- Your existing footer, popup, and other scripts go here unchanged -->
+  <!-- Paste your entire footer, popup, typing effect, contact button and drag scripts here -->
+  <!-- (exact same as your old code you gave) -->
+
 </body>
 </html>
