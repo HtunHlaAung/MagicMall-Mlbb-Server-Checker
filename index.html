@@ -4,81 +4,95 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Magic Mall MLBB ID Checker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
   <style>
     body {
-      background: #0e0e0e;
-      color: #00ffcc;
-      font-family: 'Orbitron', sans-serif;
-      text-align: center;
-      padding: 40px;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
     }
-    input, button {
-      font-family: 'Orbitron', sans-serif;
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 18px;
-      border-radius: 8px;
-      border: none;
+
+    h1 {
+      color: #fff;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 4px #000;
     }
+
     input {
-      width: 200px;
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 250px;
     }
+
     button {
-      background: #00ffcc;
-      color: black;
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      background-color: #fff;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
+      transition: background 0.3s;
     }
+
     button:hover {
-      background: #00cc99;
+      background-color: #ddd;
     }
-    #result {
-      background: #111;
-      padding: 20px;
+
+    pre {
       margin-top: 20px;
+      background: #fff;
+      padding: 15px;
       border-radius: 10px;
-      white-space: pre-wrap;
-      color: #ffffff;
+      max-width: 90%;
+      overflow-x: auto;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-
   <h1>Magic Mall MLBB ID Checker</h1>
 
   <input type="text" id="idInput" placeholder="Enter MLBB ID" />
   <input type="text" id="serverInput" placeholder="Enter Server ID" />
-  <br/>
   <button onclick="checkMLID()">Check</button>
 
-  <div id="result">Result will appear here...</div>
+  <pre id="result">Waiting for input...</pre>
 
   <script>
-    async function checkMLID() {
-      const id = document.getElementById("idInput").value.trim();
-      const server = document.getElementById("serverInput").value.trim();
+    function checkMLID() {
+      const id = document.getElementById('idInput').value.trim();
+      const server = document.getElementById('serverInput').value.trim();
+      const resultBox = document.getElementById('result');
 
       if (!id || !server) {
-        document.getElementById("result").innerText = "Please enter both ID and Server ID.";
+        resultBox.innerText = '❗ Please enter both ID and Server ID.';
         return;
       }
 
-      const url = `https://magic-mall-mlbb-id-check-v1.hlaaunghtun68.workers.dev/${id}/${server}`;
+      const url = `https://magic-mall-mlbb-id-check-v1.hlaaunghtun68.workers.dev/mobile-legends/${id}/${server}`;
+      resultBox.innerText = '⏳ Checking...';
 
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (data.message) {
-          document.getElementById("result").innerText = data.message;
-        } else {
-          document.getElementById("result").innerText = JSON.stringify(data, null, 2);
-        }
-      } catch (error) {
-        document.getElementById("result").innerText = "❌ Error: Unable to fetch data.";
-      }
+      fetch(url)
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.json();
+        })
+        .then(data => {
+          resultBox.innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+          console.error('Fetch error:', error);
+          resultBox.innerText = '❌ Error fetching data. Please check the ID and try again.';
+        });
     }
   </script>
-
 </body>
 </html>
