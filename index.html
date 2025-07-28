@@ -1,178 +1,105 @@
 <!DOCTYPE html>
-<html lang="my">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Magic Mall MLBB ID Checker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(to right, #141e30, #243b55);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(to right, #1e3c72, #2a5298);
       color: #fff;
-      font-family: 'Orbitron', sans-serif;
+      padding: 20px;
       text-align: center;
-      padding: 40px 20px;
     }
-
     h1 {
-      font-size: 2.5rem;
+      font-size: 2em;
       margin-bottom: 20px;
     }
-
     input {
       padding: 10px;
-      font-size: 1rem;
-      border-radius: 10px;
       border: none;
-      margin: 10px;
-      width: 150px;
-      text-align: center;
+      border-radius: 5px;
+      margin: 5px;
+      font-size: 16px;
     }
-
     button {
-      padding: 12px 25px;
-      font-size: 1rem;
-      background-color: #00c6ff;
-      color: #fff;
+      padding: 10px 20px;
       border: none;
-      border-radius: 12px;
+      background: #00c6ff;
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
       cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #0072ff;
-    }
-
-    #result {
-      margin-top: 30px;
-      background-color: #1c1c1c;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      white-space: pre-line;
-      text-align: left;
-    }
-
-    .loader {
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid #00c6ff;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      display: inline-block;
       margin-top: 10px;
     }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    button:hover {
+      background: #0072ff;
     }
-
-    #quote {
-      font-size: 1.1rem;
-      color: #ccc;
-      margin-bottom: 25px;
-      min-height: 24px;
-    }
-
-    #telegram {
-      display: inline-block;
-      margin-top: 30px;
-      padding: 10px 20px;
-      background-color: #0088cc;
-      color: #fff;
-      text-decoration: none;
+    #result {
+      background: rgba(255, 255, 255, 0.1);
+      margin-top: 20px;
+      padding: 20px;
       border-radius: 10px;
-      font-size: 1rem;
-    }
-
-    #telegram:hover {
-      background-color: #0077b3;
+      text-align: left;
+      white-space: pre-line;
     }
   </style>
 </head>
 <body>
   <h1>🔍 Magic Mall MLBB ID Checker</h1>
-  <div id="quote"></div>
-  <input type="text" id="idInput" placeholder="Enter ID">
-  <input type="text" id="serverInput" placeholder="Server">
-  <br>
-  <button id="checkBtn" onclick="checkMLBB()">Check</button>
 
-  <div id="loader" style="display:none;"><div class="loader"></div></div>
+  <input type="text" id="idInput" placeholder="Enter MLBB ID" />
+  <input type="text" id="serverInput" placeholder="Enter Server ID" />
+  <br>
+  <button onclick="checkMLBB()">Check</button>
+
   <div id="result"></div>
 
-  <a id="telegram" href="https://t.me/yourchannel" target="_blank">📲 Join our Telegram</a>
-
   <script>
-    // Typing animation
-    const quoteEl = document.getElementById("quote");
-    const quoteText = "MLBB ဂိမ်းအကောင့်အချက်အလက်ကို အမြန်စစ်ဆေးရန်...";
-    let quoteIndex = 0;
-    function typeQuote() {
-      if (quoteIndex < quoteText.length) {
-        quoteEl.innerHTML += quoteText.charAt(quoteIndex);
-        quoteIndex++;
-        setTimeout(typeQuote, 50);
-      }
-    }
-    typeQuote();
-
-    // Sound on click
-    const clickSound = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_b38b4d4c27.mp3");
-
     async function checkMLBB() {
-      const id = document.getElementById('idInput').value.trim();
-      const server = document.getElementById('serverInput').value.trim();
-      const resultDiv = document.getElementById('result');
-      const loader = document.getElementById('loader');
-      resultDiv.innerText = '';
-      loader.style.display = 'block';
-      clickSound.play();
+      const id = document.getElementById("idInput").value.trim();
+      const server = document.getElementById("serverInput").value.trim();
+      const resultDiv = document.getElementById("result");
 
       if (!id || !server) {
-        loader.style.display = 'none';
-        resultDiv.innerText = '❗️ကျေးဇူးပြု၍ ID နှင့် Server ထည့်ပါ။';
+        resultDiv.textContent = "❌ Please enter both ID and Server.";
         return;
       }
+
+      resultDiv.textContent = "⏳ Checking...";
 
       try {
         const res = await fetch(`https://magic-mall-mlbb-id-check-v1.hlaaunghtun68.workers.dev/mobile-legends/${id}/${server}`);
         const data = await res.json();
-        loader.style.display = 'none';
 
         if (data.error || !data.data) {
-          resultDiv.innerText = '❌ မတွေ့ပါ';
+          resultDiv.textContent = "❌ ID not found or server error.";
           return;
         }
 
-        const user = data.data;
-        let output = '✔️Accountတွေ့ပါပြီ\n\n';
-        output += `✅️Username: ${user.username || "မသိရ"}\n`;
-        output += `🆔️ID: ${user.id}\n`;
-        output += `🖥Server: ${user.server}\n`;
-        output += `🌏Region: ${user.region || "မသိရ"}\n`;
+        const info = data.data;
+        let output = "✔️Accountတွေ့ပါ\n";
+        output += `✅️Username: ${info.username}\n`;
+        output += `🆔️ID: ${info.id}\n`;
+        output += `🖥Server: ${info.server}\n`;
+        output += `🌏Region: ${info.region || 'Unknown'}\n\n`;
 
-        if (user.shop_events && user.shop_events.length > 0) {
-          output += `\n💎Shop Events\n`;
-
-          user.shop_events.forEach(event => {
+        if (info.shop_events && info.shop_events.length > 0) {
+          output += `💎Shop Events\n`;
+          for (const event of info.shop_events) {
             output += `💎${event.title}\n`;
-            event.goods.forEach(good => {
-              const title = good.title;
-              const canBuy = good.game_can_buy;
-              const status = canBuy ? '🟢ရပါသေးတယ်' : '🔴မရတော့ပါ';
-              output += `${title} - ${status}\n`;
-            });
-          });
+            for (const good of event.goods) {
+              const status = good.game_can_buy ? "🟢ရပါသေးတယ်" : "🔴မရတော့ပါ";
+              output += `${good.title} - ${status}\n`;
+            }
+          }
         }
 
-        resultDiv.innerText = output;
-      } catch (err) {
-        loader.style.display = 'none';
-        resultDiv.innerText = '⚠️ Server error. Try again later.';
+        resultDiv.textContent = output;
+      } catch (e) {
+        resultDiv.textContent = "❌ Error checking account.";
+        console.error(e);
       }
     }
   </script>
