@@ -2,415 +2,107 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Magic Mall MLBB ID Checker</title>
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
-
-  <!-- tsParticles -->
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
-
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
-    /* Reset and base */
-    * {
-      box-sizing: border-box;
-    }
     body {
       margin: 0;
-      min-height: 100vh;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 40px 15px;
-      overflow-x: hidden;
-      background-size: 400% 400%;
-      animation: gradientFlow 15s ease infinite;
-      position: relative;
-    }
-    @keyframes gradientFlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Particles background */
-    #tsparticles {
-      position: fixed !important;
-      inset: 0;
-      z-index: -1;
-    }
-
-    /* Container */
-    .container {
-      background: rgba(30, 42, 56, 0.95);
-      max-width: 480px;
-      width: 100%;
-      padding: 30px 25px;
-      border-radius: 15px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-      text-align: center;
-      animation: fadeIn 1s ease-out;
-      position: relative;
-      z-index: 1;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Logo */
-    .logo {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-      margin-bottom: 15px;
-      border: 2px solid #00c6ff;
-      background: #fff;
-      border-radius: 10px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    /* Heading */
-    h2 {
+      padding: 0;
       font-family: 'Orbitron', sans-serif;
-      font-weight: 500;
-      font-size: 24px;
-      margin: 15px 0 25px 0;
-      letter-spacing: 1.2px;
-      color: #00c6ff;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
     }
-
-    /* Quote */
-    .quote {
-      background: #2e3e55;
-      border-left: 5px solid #00c6ff;
-      padding: 15px 20px;
-      border-radius: 10px;
-      margin-bottom: 30px;
-      font-style: italic;
-      font-size: 15px;
-      opacity: 0.9;
-      min-height: 48px;
-      user-select: none;
+    h1 {
+      margin-top: 40px;
+      font-size: 2rem;
+      text-align: center;
     }
-
-    /* Inputs */
-    input[type="text"] {
+    .container {
+      background: rgba(255,255,255,0.1);
+      padding: 30px 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      margin-top: 20px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    input {
       width: 100%;
-      padding: 14px 18px;
-      margin-bottom: 15px;
+      padding: 12px;
+      margin: 8px 0;
       border-radius: 10px;
       border: none;
       outline: none;
-      font-size: 16px;
-      transition: box-shadow 0.3s ease;
-      color: #0f2027;
-      font-weight: 600;
+      font-size: 1rem;
     }
-    input[type="text"]::placeholder {
-      color: #999;
-      font-weight: 400;
-    }
-    input[type="text"]:focus {
-      box-shadow: 0 0 10px #00c6ffaa;
-    }
-
-    /* Button */
-    button#checkBtn {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(90deg, #0072ff, #00c6ff);
+    button {
+      padding: 12px 20px;
+      background-color: #00c6ff;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
       color: white;
-      font-weight: 700;
-      font-size: 17px;
-      border: none;
-      border-radius: 12px;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.3s ease;
-      user-select: none;
+      font-size: 1rem;
+      transition: background 0.3s;
     }
-    button#checkBtn:hover {
-      transform: scale(1.04);
-      box-shadow: 0 0 18px #00c6ffbb;
+    button:hover {
+      background-color: #0072ff;
     }
-    button#checkBtn:active {
-      transform: scale(0.97);
-    }
-
-    /* Loader */
-    .loader {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #00c6ff;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      animation: spin 1s linear infinite;
-      margin: 20px auto 10px auto;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* Result */
     #result {
-      margin-top: 25px;
-      background: #28394d;
-      padding: 22px 25px;
-      border-radius: 14px;
-      font-size: 16px;
-      line-height: 1.5;
+      margin-top: 20px;
+      white-space: pre-wrap;
+      background: rgba(255,255,255,0.08);
+      padding: 15px;
+      border-radius: 10px;
       text-align: left;
-      white-space: normal;
-      animation: popIn 0.35s ease-out;
-      color: #f0f0f0;
-      user-select: text;
+      font-size: 0.9rem;
     }
-    @keyframes popIn {
-      0% { opacity: 0; transform: scale(0.92); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-    #result strong {
-      color: #00c6ff;
-    }
-    #result ul {
-      padding-left: 20px;
-      margin: 8px 0 16px 0;
-    }
-    #result li {
-      margin-bottom: 5px;
-      list-style: square;
-    }
-
-    /* Status colors */
-    .error {
-      color: #ff6b6b;
-      font-weight: 600;
-      font-size: 15px;
-      user-select: none;
-    }
-    .success {
-      color: #38ef7d;
-      font-weight: 600;
-      font-size: 16px;
-    }
-
-    /* Copy button */
-    #copyBtn {
-      margin-top: 18px;
-      padding: 12px 0;
-      width: 100%;
-      background: #00c6ff;
-      border: none;
-      border-radius: 12px;
-      color: #fff;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      opacity: 0;
-      pointer-events: none;
-      user-select: none;
-      transition: opacity 0.35s ease;
-    }
-    #copyBtn.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    #copyBtn:hover {
-      background: #00aaff;
-      transform: scale(1.03);
-    }
-
-    /* Copy message */
-    #copyMsg {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #38ef7d;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-      user-select: none;
-    }
-    #copyMsg.visible {
-      opacity: 1;
-    }
-
-    /* Responsive tweaks */
-    @media (max-width: 520px) {
-      .container {
-        padding: 25px 20px;
-      }
-      h2 {
-        font-size: 20px;
-      }
-      input[type="text"] {
-        font-size: 15px;
-      }
-      button#checkBtn {
-        font-size: 16px;
-      }
-      #result {
-        font-size: 14.5px;
-      }
+    footer {
+      margin-top: auto;
+      padding: 20px;
+      font-size: 0.8rem;
+      opacity: 0.7;
     }
   </style>
 </head>
 <body>
-  <!-- Particles Background -->
-  <div id="tsparticles"></div>
-
+  <h1>MLBB ID Checker</h1>
   <div class="container">
-    <img src="logo.svg" alt="Logo" class="logo" />
-    <h2>Magic Mall GameShop MLBB ID Checker</h2>
-    <div class="quote" id="typingText"></div>
-
-    <input type="text" id="ml_id" placeholder="MLBB ID ထည့်ပါ (e.g. 123456789)" autocomplete="off" />
-    <input type="text" id="ml_server" placeholder="Server ID ထည့်ပါ (e.g. 0000)" autocomplete="off" />
-
-    <button id="checkBtn">စစ်ဆေးမည်</button>
-
+    <input type="text" id="idInput" placeholder="Enter MLBB ID" />
+    <input type="text" id="serverInput" placeholder="Enter Server ID" />
+    <button onclick="checkMLID()">Check</button>
     <div id="result"></div>
-    <button id="copyBtn" title="Copy result to clipboard">📋 Copy Result</button>
-    <div id="copyMsg">✅ Copied to clipboard!</div>
   </div>
 
+  <footer>&copy; 2025 Magic Mall - All Rights Reserved</footer>
+
   <script>
-    // tsParticles init
-    tsParticles.load("tsparticles", {
-      fullScreen: { enable: false },
-      background: { color: { value: "transparent" } },
-      fpsLimit: 60,
-      particles: {
-        number: { value: 50 },
-        color: { value: "#00c6ff" },
-        shape: { type: "circle" },
-        opacity: { value: 0.3 },
-        size: { value: 3 },
-        move: {
-          enable: true,
-          speed: 1.5,
-          direction: "none",
-          outModes: { default: "bounce" }
-        }
-      },
-      interactivity: {
-        events: {
-          onHover: { enable: true, mode: "repulse" },
-          resize: true
-        },
-        modes: {
-          repulse: { distance: 70, duration: 0.4 }
-        }
-      },
-      detectRetina: true
-    });
-
-    // Typing effect quote
-    const quoteText = `မိတ်ဆွေရဲ့ Mobile Legends account server နှင့် double diamond တွေကို လျင်မြန်စွာစစ်ဆေးနိုင်ပါတယ်။`;
-    const typingElement = document.getElementById("typingText");
-    let i = 0;
-
-    function typeEffect() {
-      if (i < quoteText.length) {
-        typingElement.innerHTML += quoteText.charAt(i);
-        i++;
-        setTimeout(typeEffect, 45);
-      }
-    }
-    window.addEventListener("load", () => {
-      setTimeout(typeEffect, 500);
-    });
-
-    // Sound on click
-    const clickSound = new Audio("clicksound.mp3");
-    document.getElementById("checkBtn").addEventListener("click", () => {
-      clickSound.play();
-      checkMLID();
-    });
-
-    // Main checker function
     async function checkMLID() {
-      const id = document.getElementById("ml_id").value.trim();
-      const server = document.getElementById("ml_server").value.trim();
-      const resultDiv = document.getElementById("result");
-      const copyBtn = document.getElementById("copyBtn");
-      const copyMsg = document.getElementById("copyMsg");
-
-      copyBtn.classList.remove("visible");
-      copyMsg.classList.remove("visible");
-      resultDiv.innerHTML = "";
+      const id = document.getElementById("idInput").value.trim();
+      const server = document.getElementById("serverInput").value.trim();
+      const resultBox = document.getElementById("result");
 
       if (!id || !server) {
-        resultDiv.innerHTML = "<p class='error'>⚠️ ကျေးဇူးပြု၍ ID နှင့် Server ကိုနှစ်ခုလုံး ဖြည့်ပါ။</p>";
+        resultBox.textContent = "❌ Please enter both ID and Server.";
         return;
       }
 
-      resultDiv.innerHTML = `
-        <div class="loader"></div>
-        <p style="text-align:center; margin-top:10px;">⏳ စစ်ဆေးနေပါပြီ...</p>
-      `;
-
+      resultBox.textContent = "⏳ Checking...";
       try {
-        const workerUrl = `https://magic-mall-mlbb-id-check-v1.hlaaunghtun68.workers.dev/mobile-legends/${id}/${server}`;
-        const response = await fetch(workerUrl);
-
-        if (!response.ok) {
-          resultDiv.innerHTML = "<p class='error'>❌ ဆာဗာမှ အမှားပြန်လာပါသည်။ ID နှင့် Server ကို စစ်ဆေးပါ။</p>";
-          return;
-        }
-
+        const response = await fetch(`https://magic-mall-mlbb-id-check-v1.hlaaunghtun68.workers.dev/mobile-legends/${id}/${server}`);
         const data = await response.json();
-
-        if (!data.data) {
-          resultDiv.innerHTML = "<p class='error'>❌ အကောင့် မတွေ့ပါ။ ID နှင့် Server ကိုမှန်ကန်စွာ ဖြည့်ပါ။</p>";
-          return;
-        }
-
-        const user = data.data;
-
-        resultDiv.innerHTML = `
-          <p class="success">✅ အကောင့်တွေ့ပါပြီ</p>
-          <p><strong>Username:</strong> ${user.username}</p>
-          <p><strong>ID:</strong> ${user.id}</p>
-          <p><strong>Server:</strong> ${user.server}</p>
-          <p><strong>Region:</strong> ${user.region || 'N/A'}</p>
-          <h4 style="margin-top: 22px;">💎 Shop Events</h4>
-          ${user.shop_events.map(event => `
-            <div style="margin-bottom: 12px;">
-              <strong>${event.title}</strong>
-              <ul>
-                ${event.goods.map(good => `
-                  <li>${good.title} - ${good.game_can_buy ? "🟢 ရနိုင်သည်" : "🔴 မရနိုင်ပါ"}</li>
-                `).join('')}
-              </ul>
-            </div>
-          `).join('')}
-        `;
-
-        copyBtn.classList.add("visible");
-      } catch (error) {
-        resultDiv.innerHTML = `<p class="error">⚠️ အမှားတစ်ခုဖြစ်ပွားခဲ့သည်: ${error.message}</p>`;
+        resultBox.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        resultBox.textContent = "❌ Error fetching data.";
       }
     }
-
-    // Copy button logic
-    document.getElementById("copyBtn").addEventListener("click", () => {
-      const text = document.getElementById("result").innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        const copyMsg = document.getElementById("copyMsg");
-        copyMsg.classList.add("visible");
-        setTimeout(() => {
-          copyMsg.classList.remove("visible");
-        }, 2000);
-      });
-    });
   </script>
-
-  <!-- You can add your footer, popup and other scripts here as before -->
-
 </body>
 </html>
