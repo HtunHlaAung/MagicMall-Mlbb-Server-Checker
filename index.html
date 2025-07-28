@@ -4,111 +4,133 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Magic Mall MLBB ID Checker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(to right, #141e30, #243b55);
-      color: #fff;
-      font-family: 'Orbitron', sans-serif;
+      background: #0f2027;
+      background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
       text-align: center;
-      padding: 40px 20px;
+      padding: 20px;
     }
 
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     }
 
-    input {
-      padding: 10px;
-      font-size: 1rem;
-      border-radius: 10px;
+    input, button {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
       border: none;
-      margin: 10px;
-      width: 150px;
-      text-align: center;
+      margin: 8px 0;
+      width: 100%;
     }
 
     button {
-      padding: 12px 25px;
-      font-size: 1rem;
-      background-color: #00c6ff;
-      color: #fff;
-      border: none;
-      border-radius: 12px;
+      background: #00c6ff;
+      color: white;
       cursor: pointer;
-      transition: background 0.3s ease;
     }
 
     button:hover {
-      background-color: #0072ff;
+      background: #0072ff;
     }
 
     #result {
-      margin-top: 30px;
-      background-color: #1c1c1c;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      margin-top: 20px;
       white-space: pre-line;
+      text-align: left;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 12px;
+    }
+
+    #loading {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid #00c6ff;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <h1>🔍 MLBB ID Checker</h1>
-  <input type="text" id="idInput" placeholder="Enter ID">
-  <input type="text" id="serverInput" placeholder="Server">
-  <br>
-  <button onclick="checkMLBB()">Check</button>
+  <div class="container">
+    <h2>Magic Mall MLBB ID Checker</h2>
+    <input type="text" id="idInput" placeholder="Enter MLBB ID">
+    <input type="text" id="serverInput" placeholder="Enter Server">
+    <button onclick="checkMLID()">🔍 Check Now</button>
 
-  <div id="result"></div>
+    <div id="loading"><div class="spinner"></div></div>
+    <div id="result"></div>
+  </div>
 
   <script>
-    async function checkMLBB() {
-      const id = document.getElementById('idInput').value.trim();
-      const server = document.getElementById('serverInput').value.trim();
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerText = '🔎 Checking...';
+    async function checkMLID() {
+      const id = document.getElementById("idInput").value.trim();
+      const server = document.getElementById("serverInput").value.trim();
+      const result = document.getElementById("result");
+      const loading = document.getElementById("loading");
 
+      result.textContent = "";
       if (!id || !server) {
-        resultDiv.innerText = '❗️Please enter both ID and Server.';
+        result.textContent = "⚠️ Please enter both ID and Server.";
         return;
       }
 
-      try {
-        const res = await fetch(`https://magic-mall-mlbb-id-check-v1.hlaaunghtun68.workers.dev/mobile-legends/${id}/${server}`);
-        const data = await res.json();
+      loading.style.display = "block";
 
-        if (data.error || !data.data) {
-          resultDiv.innerText = '❌မတွေ့ပါ';
+      try {
+        const response = await fetch(`https://magic-mall-mlbb-id-check-v1.hlaaunghtun68.workers.dev/mobile-legends/${id}/${server}`);
+        const json = await response.json();
+
+        loading.style.display = "none";
+
+        if (json.error || !json.data) {
+          result.textContent = "❌ Account not found.";
           return;
         }
 
-        const user = data.data;
-        let output = '✔️Accountတွေ့ပါ\n\n';
-        output += `✅️Username: ${user.username || "မသိရ"}\n`;
-        output += `🆔️ID: ${user.id}\n`;
-        output += `🖥Server: ${user.server}\n`;
-        output += `🌏Region: ${user.region || "မသိရ"}\n`;
+        const data = json.data;
+        let message = "✔️Accountတွေ့ပါ\n\n";
+        message += `✅️Username: ${data.username}\n`;
+        message += `🆔️ID: ${data.id}\n`;
+        message += `🖥Server: ${data.server}\n`;
+        message += `🌏Region: ${data.region}\n`;
 
-        if (user.shop_events && user.shop_events.length > 0) {
-          output += `\n💎Shop Events\n`;
-
-          user.shop_events.forEach(event => {
-            output += `💎${event.title}\n`;
+        if (data.shop_events && data.shop_events.length > 0) {
+          message += `\n💎Shop Events\n`;
+          data.shop_events.forEach(event => {
+            message += `\n💎${event.title}\n`;
             event.goods.forEach(good => {
-              const title = good.title;
-              const canBuy = good.game_can_buy;
-              const status = canBuy ? '🟢ရပါသေးတယ်' : '🔴မရတော့ပါ';
-              output += `${title} - ${status}\n`;
+              const status = good.game_can_buy ? "🟢ရပါသေးတယ်" : "🔴မရတော့ပါ";
+              message += `${good.title} - ${status}\n`;
             });
           });
         }
 
-        resultDiv.innerText = output;
-      } catch (err) {
-        console.error(err);
-        resultDiv.innerText = '⚠️ Server error. Try again later.';
+        result.textContent = message;
+      } catch (error) {
+        loading.style.display = "none";
+        result.textContent = "🚫 Server error. Please try again later.";
       }
     }
   </script>
