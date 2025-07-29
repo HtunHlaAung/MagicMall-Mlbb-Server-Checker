@@ -6,7 +6,6 @@
   <title>Magic Mall MLBB ID Checker V1</title>
   <style>
     body {
-      background: #0f2027;
       background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: white;
@@ -52,17 +51,6 @@
       border-radius: 12px;
     }
 
-    #copyBtn {
-      margin-top: 10px;
-      background: #00ff9d;
-      color: #000;
-      font-weight: bold;
-    }
-
-    #copyBtn:hover {
-      background: #00cc7a;
-    }
-
     #loading {
       display: none;
       margin-top: 20px;
@@ -82,6 +70,16 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    #copyBtn {
+      margin-top: 10px;
+      background: #444;
+      font-size: 14px;
+    }
+
+    #copyBtn:hover {
+      background: #666;
+    }
   </style>
 </head>
 <body>
@@ -93,7 +91,7 @@
 
     <div id="loading"><div class="spinner"></div></div>
     <div id="result"></div>
-    <button id="copyBtn" style="display:none;" onclick="copyResult()">📋 Copy Result</button>
+    <button id="copyBtn" onclick="copyResult()">📋 Copy Result</button>
   </div>
 
   <script>
@@ -102,11 +100,8 @@
       const server = document.getElementById("serverInput").value.trim();
       const result = document.getElementById("result");
       const loading = document.getElementById("loading");
-      const copyBtn = document.getElementById("copyBtn");
 
       result.textContent = "";
-      copyBtn.style.display = "none";
-
       if (!id || !server) {
         result.textContent = "⚠️ ကျေးဇူးပြု၍ ID နှင့် Server ID နှစ်ခုလုံးထည့်ပါ။";
         return;
@@ -126,24 +121,29 @@
         }
 
         const data = json.data;
-        let message = `Account : ${data.username}\n`;
+        let message = "✔️ Account တွေ့ပါပြီ\n\n";
+        message += `Account : ${data.username}\n`;
         message += `ID: ${data.id}\n`;
         message += `Server: ${data.server}\n`;
-        message += `🌏နိုင်ငံ: ${data.region}\n`;
+        message += `🌏 နိုင်ငံ: ${data.region}\n`;
+
+        message += `\n💎 Shop Events\n`;
 
         if (data.shop_events && data.shop_events.length > 0) {
-          message += `\nShop Events\n`;
           data.shop_events.forEach(event => {
-            message += `${event.title}\n`;
-            event.goods.forEach(good => {
-              const status = good.game_can_buy ? "🟢ရပါသေးတယ်" : "🔴မရတော့ပါ";
-              message += `${good.title} - ${status}\n`;
-            });
+            if (event.title.toLowerCase().includes("double diamonds")) {
+              message += `\n${event.title}\n`;
+              event.goods.forEach(good => {
+                const status = good.game_can_buy ? "ရပါသေးတယ်" : "မရတော့ပါ";
+                message += `${good.title} - ${status}\n`;
+              });
+            }
           });
+        } else {
+          message += "မရှိပါ။\n";
         }
 
         result.textContent = message;
-        copyBtn.style.display = "inline-block";
       } catch (error) {
         loading.style.display = "none";
         result.textContent = "🚫 Server error. Please try again later.";
@@ -152,8 +152,12 @@
 
     function copyResult() {
       const result = document.getElementById("result").textContent;
+      if (!result) return;
+
       navigator.clipboard.writeText(result).then(() => {
-        alert("📋 ရလဒ်ကို ကူးယူပြီးပါပြီ။");
+        alert("📋 မိတ္တူယူပြီးပါပြီ။");
+      }).catch(() => {
+        alert("❌ မိတ္တူမယူနိုင်ပါ။");
       });
     }
   </script>
