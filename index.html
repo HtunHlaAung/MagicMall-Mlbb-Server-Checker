@@ -3,86 +3,259 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Magic Mall MLBB ID Checker</title>
+  <title>Magic Mall MLBB ID Checker v4</title>
+
+  <!-- Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
+  <!-- tsParticles library -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
   <style>
+    * { box-sizing: border-box; }
+
     body {
-      background: #0f2027;
-      background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: white;
-      text-align: center;
-      padding: 20px;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 40px 20px;
+      min-height: 100vh;
+      overflow-x: hidden;
+      animation: gradientFlow 10s ease infinite;
+      background-size: 400% 400%;
+      position: relative;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Particle container - fills entire screen, behind all */
+    #tsparticles {
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
 
     .container {
-      max-width: 400px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.05);
+      background: #1e2a38;
       padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 100%;
+      animation: fadeIn 1s ease-out;
+      text-align: center;
+      position: relative;
+      z-index: 1; /* Above particles */
     }
 
-    input, button {
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: none;
-      margin: 8px 0;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      margin-bottom: 15px;
+      border: 2px solid #00c6ff;
+      background: #fff;
+      border-radius: 10px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 22px;
+      letter-spacing: 1px;
+    }
+
+    .quote {
+      background: #2e3e55;
+      border-left: 5px solid #00c6ff;
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      font-style: italic;
+      font-size: 14.5px;
+      opacity: 0.95;
+    }
+
+    input {
       width: 100%;
+      padding: 12px 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+
+    input:hover {
+      box-shadow: 0 0 8px rgba(0,198,255,0.4);
+      transition: 0.3s;
     }
 
     button {
-      background: #00c6ff;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #0072ff, #00c6ff);
       color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
       cursor: pointer;
+      transition: 0.3s;
     }
 
     button:hover {
-      background: #0072ff;
+      transform: scale(1.03);
+      box-shadow: 0 0 12px #00c6ff80;
     }
 
-    #result {
-      margin-top: 20px;
-      white-space: pre-line;
-      text-align: left;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 15px;
-      border-radius: 12px;
+    button:active {
+      transform: scale(0.98);
     }
 
-    #loading {
-      display: none;
-      margin-top: 20px;
-    }
-
-    .spinner {
-      border: 4px solid rgba(255, 255, 255, 0.3);
+    .loader {
+      border: 4px solid #f3f3f3;
       border-top: 4px solid #00c6ff;
       border-radius: 50%;
       width: 30px;
       height: 30px;
       animation: spin 1s linear infinite;
-      margin: 0 auto;
+      margin-top: 10px;
     }
 
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    #result {
+      margin-top: 20px;
+      background: #28394d;
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 15px;
+      line-height: 1.5;
+      white-space: normal;
+      text-align: left;
+      animation: popIn 0.5s ease-out;
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    ul {
+      margin: 5px 0 10px 20px;
+      padding: 0;
+    }
+
+    li {
+      list-style: square;
+      margin-bottom: 3px;
+    }
+
+    .error { color: #ff6b6b; }
+    .success { color: #38ef7d; }
+
+    #copyBtn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #00c6ff;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #fff;
+      font-size: 14px;
+      transition: 0.2s ease;
+      display: none; /* hidden initially */
+    }
+
+    #copyBtn:hover {
+      background: #00aaff;
+      transform: scale(1.03);
+    }
+
+    #copyMsg {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #38ef7d;
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Magic Mall MLBB ID Checker</h2>
-    <input type="text" id="idInput" placeholder="Enter MLBB ID">
-    <input type="text" id="serverInput" placeholder="Enter Server">
-    <button onclick="checkMLID()">🔍 Check Now</button>
+  
+  <!-- PARTICLES BACKGROUND -->
+  <div id="tsparticles"></div>
 
-    <div id="loading"><div class="spinner"></div></div>
+  <div class="container">
+    <img src="logo.svg" alt="Logo" class="logo" />
+    <h2>Magic Mall GameShop MLBB ID Checker V4</h2>
+<div class="quote" id="typingText"></div>
+    <input type="text" id="ml_id" placeholder="MLBB IDထည့်ပါ (e.g. 123456789)" />
+    <input type="text" id="ml_server" placeholder="Server ID ထည့်ပါ (e.g. 0000)" />
+    <button id="checkBtn">စစ်ဆေးမည်</button>
     <div id="result"></div>
+    <button id="copyBtn">📋 Copy Result</button>
+    <div id="copyMsg">✅ Copied to clipboard!</div>
   </div>
 
+  <script>
+    // Initialize particles
+    tsParticles.load("tsparticles", {
+      fullScreen: { enable: false },
+      background: { color: { value: "transparent" } },
+      fpsLimit: 60,
+      particles: {
+        number: { value: 50 },
+        color: { value: "#00c6ff" },
+        shape: { type: "circle" },
+        opacity: { value: 0.3 },
+        size: { value: 3 },
+        move: {
+          enable: true,
+          speed: 1.5,
+          direction: "none",
+          outModes: { default: "bounce" }
+        }
+      },
+      interactivity: {
+        events: {
+          onHover: { enable: true, mode: "repulse" },
+          resize: true
+        },
+        modes: {
+          repulse: { distance: 70, duration: 0.4 }
+        }
+      },
+      detectRetina: true
+    });
+
+    // Your existing code below
+    const clickSound = new Audio("clicksound.mp3");
+    document.getElementById("checkBtn").onclick = () => {
+      clickSound.play();
+      checkMLID();
+    };
   <script>
     async function checkMLID() {
       const id = document.getElementById("idInput").value.trim();
@@ -92,7 +265,7 @@
 
       result.textContent = "";
       if (!id || !server) {
-        result.textContent = "⚠️ Please enter both ID and Server.";
+        result.textContent = "⚠️ ကျေးဇူးပြု၍ ID နှင့် Server ID ထည့်ပါ။.";
         return;
       }
 
@@ -105,13 +278,13 @@
         loading.style.display = "none";
 
         if (json.error || !json.data) {
-          result.textContent = "❌ Account not found.";
+          result.textContent = "❌ Account မတွေ့ပါ.";
           return;
         }
 
         const data = json.data;
-        let message = "✔️Accountတွေ့ပါ\n\n";
-        message += `✅️Username: ${data.username}\n`;
+        let message = "✔️Accountတွေ့ပါပြီ\n\n";
+        message += `✅️အမည်: ${data.username}\n`;
         message += `🆔️ID: ${data.id}\n`;
         message += `🖥Server: ${data.server}\n`;
         message += `🌏Region: ${data.region}\n`;
