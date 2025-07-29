@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Magic Mall MLBB ID Checker</title>
+  <title>Magic Mall MLBB ID Checker V1</title>
   <style>
     body {
       background: #0f2027;
@@ -74,10 +74,10 @@
 </head>
 <body>
   <div class="container">
-    <h2>Magic Mall MLBB ID Checker</h2>
+    <h2>Magic Mall MLBB ID Checker V1</h2>
     <input type="text" id="idInput" placeholder="Enter MLBB ID">
     <input type="text" id="serverInput" placeholder="Enter Server">
-    <button onclick="checkMLID()">🔍 Check Now</button>
+    <button onclick="checkMLID()">စစ်ဆေးမည်။</button>
 
     <div id="loading"><div class="spinner"></div></div>
     <div id="result"></div>
@@ -92,7 +92,7 @@
 
       result.textContent = "";
       if (!id || !server) {
-        result.textContent = "⚠️ Please enter both ID and Server.";
+        result.textContent = "⚠️ ကျေးဇူးပြု၍ ID နှင့် Server ID နှစ်ခုလုံးထည့်ပါ။.";
         return;
       }
 
@@ -110,11 +110,11 @@
         }
 
         const data = json.data;
-        let message = "✔️Accountတွေ့ပါ\n\n";
-        message += `✅️Username: ${data.username}\n`;
+        let message = "✔️Accountတွေ့ပါပြီ\n\n";
+        message += `✅️အမည်: ${data.username}\n`;
         message += `🆔️ID: ${data.id}\n`;
         message += `🖥Server: ${data.server}\n`;
-        message += `🌏Region: ${data.region}\n`;
+        message += `🌏နိုင်ငံ: ${data.region}\n`;
 
         if (data.shop_events && data.shop_events.length > 0) {
           message += `\n💎Shop Events\n`;
