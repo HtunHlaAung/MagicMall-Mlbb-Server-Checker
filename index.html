@@ -1,41 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Magic Mall MLBB ID Checker V1</title>
+  <title>Magic Mall MLBB ID Checker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f2027;
-      --fg: white;
-      --btn-bg: #00c6ff;
-      --btn-hover: #0072ff;
-      --result-bg: rgba(255, 255, 255, 0.05);
+      --bg-color: #0f2027;
+      --text-color: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.05);
     }
 
     [data-theme="light"] {
-      --bg: #f9f9f9;
-      --fg: #111;
-      --btn-bg: #0072ff;
-      --btn-hover: #0052cc;
-      --result-bg: #e3e3e3;
+      --bg-color: #f0f0f0;
+      --text-color: #000000;
+      --card-bg: rgba(0, 0, 0, 0.05);
     }
 
     body {
-      background: var(--bg);
-      color: var(--fg);
+      background: var(--bg-color);
+      color: var(--text-color);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       text-align: center;
       padding: 20px;
-      transition: background 0.5s, color 0.5s;
+      transition: background 0.3s, color 0.3s;
     }
 
     .container {
       max-width: 400px;
       margin: 0 auto;
+      background: var(--card-bg);
       padding: 30px;
       border-radius: 16px;
-      background: var(--result-bg);
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     }
 
@@ -44,30 +41,29 @@
       font-size: 16px;
       border-radius: 8px;
       border: none;
-      margin: 8px 0;
+      margin: 8px auto;
       width: 100%;
+      display: block;
       box-sizing: border-box;
     }
 
     button {
-      background: var(--btn-bg);
+      background: #00c6ff;
       color: white;
       cursor: pointer;
-      transition: background 0.3s;
     }
 
     button:hover {
-      background: var(--btn-hover);
+      background: #0072ff;
     }
 
     #result {
       margin-top: 20px;
-      white-space: pre-line;
       text-align: left;
-      background: var(--result-bg);
+      background: rgba(0, 0, 0, 0.2);
       padding: 15px;
       border-radius: 12px;
-      min-height: 100px;
+      white-space: pre-line;
     }
 
     #loading {
@@ -90,36 +86,25 @@
       100% { transform: rotate(360deg); }
     }
 
-    #copyBtn {
-      margin-top: 10px;
-      background: #444;
-      font-size: 14px;
-    }
-
-    #copyBtn:hover {
-      background: #666;
-    }
-
-    /* Toggle Switch Style */
-    .switch-container {
+    .theme-switch {
       display: flex;
-      justify-content: center;
       align-items: center;
-      margin-top: 15px;
+      justify-content: center;
+      margin-bottom: 20px;
     }
 
-    .switch {
+    .theme-switch input {
+      display: none;
+    }
+
+    .switch-label {
       position: relative;
       display: inline-block;
-      width: 50px;
-      height: 24px;
+      width: 60px;
+      height: 34px;
     }
 
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
+    .switch-label input { display: none; }
 
     .slider {
       position: absolute;
@@ -127,19 +112,19 @@
       top: 0; left: 0;
       right: 0; bottom: 0;
       background-color: #ccc;
-      transition: 0.4s;
-      border-radius: 24px;
+      transition: .4s;
+      border-radius: 34px;
     }
 
     .slider:before {
       position: absolute;
       content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
       background-color: white;
-      transition: 0.4s;
+      transition: .4s;
       border-radius: 50%;
     }
 
@@ -153,39 +138,34 @@
   </style>
 </head>
 <body>
+  <div class="theme-switch">
+    <label class="switch-label">
+      <input type="checkbox" id="themeToggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+
   <div class="container">
-    <h2>Magic Mall MLBB ID Checker V1</h2>
-    <input type="text" id="idInput" placeholder="Enter MLBB ID">
-    <input type="text" id="serverInput" placeholder="Enter Server">
+    <h2 id="typingText">Magic Mall MLBB ID Checker</h2>
+    <input type="text" id="idInput" placeholder="MLBB ID ထည့်ပါ။">
+    <input type="text" id="serverInput" placeholder="Server ထည့်ပါ။">
     <button onclick="checkMLID()">စစ်ဆေးမည်။</button>
     <div id="loading"><div class="spinner"></div></div>
     <div id="result"></div>
-    <button id="copyBtn" onclick="copyResult()">📋 Copy Result</button>
-
-    <div class="switch-container">
-      <label class="switch">
-        <input type="checkbox" onchange="toggleTheme()" id="themeSwitch">
-        <span class="slider"></span>
-      </label>
-    </div>
+    <button onclick="copyResult()">📋 ရလာဒ်ကို ကူးမယ်</button>
   </div>
 
   <script>
-    let currentTheme = 'dark';
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('change', () => {
+      document.documentElement.setAttribute('data-theme', themeToggle.checked ? 'light' : 'dark');
+    });
 
-    function toggleTheme() {
-      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', currentTheme);
-    }
-
-    function typeText(element, text, delay = 30) {
-      element.textContent = "";
-      let i = 0;
-      const typer = setInterval(() => {
-        element.textContent += text.charAt(i);
-        i++;
-        if (i >= text.length) clearInterval(typer);
-      }, delay);
+    function copyResult() {
+      const result = document.getElementById("result").textContent;
+      navigator.clipboard.writeText(result).then(() => {
+        alert("✔️ ရလာဒ်ကို ကူးပြီးပါပြီ။");
+      });
     }
 
     async function checkMLID() {
@@ -205,67 +185,52 @@
       try {
         const response = await fetch(`https://magic-mall-mlbb-id-check-v1.hlaaunghtun68.workers.dev/mobile-legends/${id}/${server}`);
         const json = await response.json();
-
         loading.style.display = "none";
 
         if (json.error || !json.data) {
-          typeText(result, "❌ Account မတွေ့ပါ😢.");
+          result.textContent = "❌ Account မတွေ့ပါ။";
           return;
         }
 
         const data = json.data;
-        let message = "✔️ Account တွေ့ပါပြီ\n\n";
-        message += `Account : ${data.username}\n`;
-        message += `ID: ${data.id}\n`;
-        message += `Server: ${data.server}\n`;
-        message += `🌏 နိုင်ငံ: ${data.region}\n`;
-
-        message += `\n💎 Shop Events\n`;
-
-        let foundDouble = false;
+        let message = "✔️Account တွေ့ပါပြီ\n\n";
+        message += `✅️အမည် : ${data.username}\n`;
+        message += `🆔️ID: ${data.id}\n`;
+        message += `🖥Server: ${data.server}\n`;
+        message += `🌏နိုင်ငံ: ${data.region}\n`;
 
         if (data.shop_events && data.shop_events.length > 0) {
+          message += `\n💎Shop Events\n`;
           data.shop_events.forEach(event => {
-            if (event.title.toLowerCase().includes("double diamonds")) {
-              foundDouble = true;
-              message += `\n${event.title}\n`;
-              event.goods.forEach(good => {
-                const status = good.game_can_buy ? "🟢ရပါသေးတယ်" : "🔴မရတော့ပါ";
-                message += `${good.title} - ${status}\n`;
-              });
-            }
+            message += `\n${event.title}\n`;
+            event.goods.forEach(good => {
+              const status = good.game_can_buy ? "🟢ရပါသေးတယ်" : "🔴မရတော့ပါ";
+              message += `${good.title} - ${status}\n`;
+            });
           });
         }
 
-        if (!foundDouble) {
-          message += "မရှိပါ။\n";
-        }
-
-        typeText(result, message);
+        result.textContent = message;
       } catch (error) {
         loading.style.display = "none";
-        typeText(result, "🚫 Server error. Please try again later.");
+        result.textContent = "🚫 Server error. ပြန်စမ်းကြည့်ပါ။";
       }
     }
 
-    function copyResult() {
-      const result = document.getElementById("result").textContent;
-      if (!result) return;
-
-      navigator.clipboard.writeText(result).then(() => {
-        alert("📋 Copyယူပြီးပါပြီ။");
-      }).catch(() => {
-        alert("❌ Copyမယူနိုင်ပါ။");
-      });
+    // Typing animation
+    const text = "Magic Mall MLBB ID Checker";
+    let index = 0;
+    function type() {
+      if (index < text.length) {
+        document.getElementById("typingText").textContent += text.charAt(index);
+        index++;
+        setTimeout(type, 100);
+      }
     }
-
-    // Set default theme to dark on load
-    document.addEventListener("DOMContentLoaded", () => {
-      document.documentElement.setAttribute("data-theme", "dark");
-      document.getElementById("themeSwitch").checked = false;
-    });
+    document.getElementById("typingText").textContent = "";
+    type();
   </script>
-   <!-- Your footer, popup etc. can remain unchanged below -->
+     <!-- Your footer, popup etc. can remain unchanged below -->
 <footer style="margin-top:60px; padding:30px 20px; background:linear-gradient(135deg, #00c6ff, #0072ff); color:white; text-align:center; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow:0 -8px 25px rgba(0,0,0,0.3); font-family:'Segoe UI', sans-serif; animation:glow 4s infinite alternate;">
     <h3 style="margin-bottom:10px; font-size:22px; letter-spacing:0.5px;">📢 Connect With Us</h3>
     <div style="margin-top:20px; display:flex; justify-content:center; gap:30px; flex-wrap:wrap;">
