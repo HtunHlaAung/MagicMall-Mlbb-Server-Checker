@@ -2,12 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Magic Mall MLBB ID Checker V1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
+  <title>Magic Mall MLBB ID Checker V1</title>  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <style>
     body {
-      background: #0f2027;
       background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+      background-size: 400% 400%;
+      animation: backgroundAnimation 15s ease infinite;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: white;
       text-align: center;
@@ -33,22 +35,15 @@
     }
 
     button {
-      background: #00c6ff;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
       color: white;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
 
     button:hover {
-      background: #0072ff;
-    }
-
-    #result {
-      margin-top: 20px;
-      white-space: pre-line;
-      text-align: left;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 15px;
-      border-radius: 12px;
+      background: linear-gradient(to right, #0072ff, #00c6ff);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
 
     #loading {
@@ -58,7 +53,7 @@
 
     .spinner {
       border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid #00c6ff;
+      border-top: 4px solid #0072ff;
       border-radius: 50%;
       width: 30px;
       height: 30px;
@@ -70,14 +65,53 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    @keyframes backgroundAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      text-align: left;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      font-size: 14px;
+    }
+
+    #result h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #00c6ff;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+        width: 90%;
+      }
+
+      input, button {
+        font-size: 14px;
+        padding: 10px;
+      }
+
+      #result {
+        font-size: 13px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Magic Mall MLBB ID Checker V1</h2>
-    <input type="text" id="idInput" placeholder="Enter MLBB ID">
-    <input type="text" id="serverInput" placeholder="Enter Server">
-    <button onclick="checkMLID()">စစ်ဆေးမည်။</button>
+    <p style="font-size: 14px; color: #ddd;"> Mobile Legends account server နှင့် double diamond တွေကို လျင်မြန်စွာစစ်ဆေးနိုင်ပါတယ်။"</p>
+    <input type="text" id="idInput" placeholder="MLBB IDထည့်ပါ">
+    <input type="text" id="serverInput" placeholder="Server IDထည့်ပါ">
+    <button onclick="checkMLID()"><i class="fas fa-search"></i> စစ်ဆေးမည်။</button>
 
     <div id="loading"><div class="spinner"></div></div>
     <div id="result"></div>
@@ -134,5 +168,149 @@
       }
     }
   </script>
+  <!-- Your footer, popup etc. can remain unchanged below -->
+<footer style="margin-top:60px; padding:30px 20px; background:linear-gradient(135deg, #00c6ff, #0072ff); color:white; text-align:center; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow:0 -8px 25px rgba(0,0,0,0.3); font-family:'Segoe UI', sans-serif; animation:glow 4s infinite alternate;">
+    <h3 style="margin-bottom:10px; font-size:22px; letter-spacing:0.5px;">📢 Connect With Us</h3>
+    <div style="margin-top:20px; display:flex; justify-content:center; gap:30px; flex-wrap:wrap;">
+      <a href="https://t.me/Magic_Mall_GameShop" target="_blank" title="Telegram Account" style="text-align:center; text-decoration:none;">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg" alt="Telegram" style="width:30px; height:30px; filter:invert(1);" />
+        <div style="font-size:14px; margin-top:5px;">Telegram Account</div>
+      </a>
+      <a href="https://t.me/Magic_Mall_Game_Shop" target="_blank" title="Telegram Channel">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg" alt="Telegram Channel" style="width:30px; height:30px; filter:invert(1);" />
+      </a>
+      <a href="http://t.me/MagicMallGameShop_bot/MagicMallGameShop" target="_blank" title="Visit Website" style="text-align:center; text-decoration:none;">
+        <div style="width:30px; height:30px; background:white; color:#0072ff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:18px; box-shadow:0 0 8px #fff; margin:0 auto;">M</div>
+        <div style="font-size:14px; margin-top:5px;">MagicMallGameShopBot</div>
+      </a>
+    </div>
+    <p style="font-size:13px; margin-top:25px; opacity:0.8;">© 2025 Magic Mall — All rights reserved</p>
+
+    <style>
+      @keyframes glow {
+        0% { box-shadow: 0 -8px 25px rgba(0,198,255,0.4); }
+        100% { box-shadow: 0 -12px 35px rgba(0,198,255,0.9); }
+      }
+    </style>
+  </footer>
+  <!-- 🔽 Add this just before </body> -->
+
+<!-- POPUP -->
+<div id="popupOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,20,30,0.85); align-items:center; justify-content:center; z-index:9999;">
+  <div style="background:#1e2a38; padding:30px 25px; border-radius:15px; text-align:center; color:#fff; max-width:350px; width:90%; position:relative; box-shadow:0 0 20px #00c6ff70; animation:popupZoom 0.5s ease;">
+    <span onclick="closePopup()" style="position:absolute; top:10px; right:15px; font-size:18px; color:#fff; cursor:pointer;">✖</span>
+    <img src="logo.svg" alt="Logo" style="width:70px; height:70px; border-radius:12px; background:white; padding:5px; margin-bottom:15px;">
+    <h3>📢 Please Join Our Telegram Channel!</h3>
+    <p>Updateလေးတွေသိရအောင်အဆင်ပြေရင် Channelလေး joinခြင်းဖြင့်ကူညီနိုင်ပါတယ်ရှင့်။</p>
+    <a href="https://t.me/Magic_Mall_Game_Shop" target="_blank">
+      <button style="margin-top:15px; padding:12px 25px; background:linear-gradient(to right, #0072ff, #00c6ff); color:#fff; font-size:16px; font-weight:bold; border:none; border-radius:10px; cursor:pointer;">👉 Join Now</button>
+    </a>
+  </div>
+</div>
+
+<!-- POPUP ANIMATION STYLE -->
+<style>
+  @keyframes popupZoom {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+</style>
+
+<!-- POPUP SCRIPT -->
+<script>
+function showPopup() {
+  document.getElementById("popupOverlay").style.display = "flex";
+}
+
+function closePopup() {
+  document.getElementById("popupOverlay").style.display = "none";
+  // No storage, so popup will show every load
+}
+
+window.addEventListener("load", () => {
+  setTimeout(showPopup, 3000); // Always show after 3 seconds
+});
+</script>
+    <!-- ✅ Floating Draggable Telegram Button -->
+<div id="contactUsBtn" onclick="showContactPopup()" style="position:fixed; bottom:30px; right:30px; background:linear-gradient(to right, #0088cc, #00c6ff); padding:12px 16px; border-radius:50px; display:flex; align-items:center; gap:8px; color:#fff; font-weight:bold; font-size:14px; box-shadow:0 0 12px rgba(0,198,255,0.6); cursor:grab; z-index:10000; transition:top 0.15s ease, left 0.15s ease;">
+  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg" alt="Telegram" style="width:20px; height:20px; filter:invert(1);">
+  Help
+</div>
+
+<!-- ✅ Contact Popup -->
+<div id="contactPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); justify-content:center; align-items:center; z-index:9999;">
+  <div id="popupBox" style="background:#1e2a38; padding:25px; border-radius:15px; max-width:350px; width:90%; text-align:center; color:white; box-shadow:0 0 20px #00c6ff; position:relative;">
+    <img src="logo.svg" alt="Logo" style="width:70px; height:70px; border-radius:12px; background:white; padding:5px; margin-bottom:15px;">
+    <h3>📞 Contact Support</h3>
+    <p> Error တစ်ခုခုဖြစ်ခဲ့ပါကTelegram မှတဆင့်ဆက်သွယ်နိုင်ပါတယ်။</p>
+    <a href="https://t.me/Magic_Mall_GameShop" target="_blank" style="display:inline-block; margin-top:15px; background:linear-gradient(to right,#0072ff,#00c6ff); color:white; padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:bold;">📨 Message Us</a>
+  </div>
+</div>
+
+<!-- ✅ Script for Drag, Open, Auto-Close -->
+<script>
+  const btn = document.getElementById("contactUsBtn");
+  const popup = document.getElementById("contactPopup");
+  const popupBox = document.getElementById("popupBox");
+
+  // ✅ Show Popup
+  function showContactPopup() {
+    popup.style.display = "flex";
+  }
+
+  // ✅ Close if clicked outside the box
+  popup.addEventListener("click", function (e) {
+    if (!popupBox.contains(e.target)) {
+      popup.style.display = "none";
+    }
+  });
+
+  // ✅ Drag Logic
+  let isDragging = false, offsetX = 0, offsetY = 0;
+
+  // Desktop drag
+  btn.addEventListener("mousedown", function (e) {
+    isDragging = true;
+    offsetX = e.clientX - btn.getBoundingClientRect().left;
+    offsetY = e.clientY - btn.getBoundingClientRect().top;
+    btn.style.cursor = "grabbing";
+  });
+
+  document.addEventListener("mousemove", function (e) {
+    if (isDragging) {
+      btn.style.left = e.clientX - offsetX + "px";
+      btn.style.top = e.clientY - offsetY + "px";
+      btn.style.right = "auto";
+      btn.style.bottom = "auto";
+    }
+  });
+
+  document.addEventListener("mouseup", function () {
+    isDragging = false;
+    btn.style.cursor = "grab";
+  });
+
+  // Mobile drag
+  btn.addEventListener("touchstart", function (e) {
+    isDragging = true;
+    const touch = e.touches[0];
+    offsetX = touch.clientX - btn.getBoundingClientRect().left;
+    offsetY = touch.clientY - btn.getBoundingClientRect().top;
+  });
+
+  document.addEventListener("touchmove", function (e) {
+    if (isDragging) {
+      const touch = e.touches[0];
+      btn.style.left = touch.clientX - offsetX + "px";
+      btn.style.top = touch.clientY - offsetY + "px";
+      btn.style.right = "auto";
+      btn.style.bottom = "auto";
+    }
+  });
+
+  document.addEventListener("touchend", function () {
+    isDragging = false;
+  });
+</script>
 </body>
 </html>
