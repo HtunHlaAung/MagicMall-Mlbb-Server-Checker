@@ -139,27 +139,26 @@
         loading.style.display = "none";
 
         if (json.error || !json.data) {
-          result.textContent = "❌ Account not found.";
+          result.textContent = "❌ Account မတွေ့ပါ။";
           return;
         }
 
         const data = json.data;
-        let message = "✔️Accountတွေ့ပါပြီ\n\n";
-        message += `✅️အမည်: ${data.username}\n`;
-        message += `🆔️ID: ${data.id}\n`;
-        message += `🖥Server: ${data.server}\n`;
-        message += `🌏နိုင်ငံ: ${data.region}\n`;
+let message = `✅️အမည် : ${data.username}\n`;
+message += `🆔️ID: ${data.id}\n`;
+message += `🖥Server: ${data.server}\n`;
+message += `🌏နိုင်ငံ: ${data.region}\n`;
 
-        if (data.shop_events && data.shop_events.length > 0) {
-          message += `\n💎Shop Events\n`;
-          data.shop_events.forEach(event => {
-            message += `\n💎${event.title}\n`;
-            event.goods.forEach(good => {
-              const status = good.game_can_buy ? "🟢ရပါသေးတယ်" : "🔴မရတော့ပါ";
-              message += `${good.title} - ${status}\n`;
-            });
-          });
-        }
+if (data.shop_events && data.shop_events.length > 0) {
+  message += `\nShop Events\n`;
+  data.shop_events.forEach(event => {
+    message += `${event.title}\n`;
+    event.goods.forEach(good => {
+      const status = good.game_can_buy ? "🟢ရပါသေးတယ်" : "🔴မရတော့ပါ";
+      message += `${good.title} - ${status}\n`;
+    });
+  });
+}
 
         result.textContent = message;
       } catch (error) {
