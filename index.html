@@ -3,23 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Magic Mall MLBB ID Checker V1</title>
+  <title>Magic Mall MLBB ID Checker V2</title>
   <style>
+    :root {
+      --bg: #0f2027;
+      --fg: white;
+      --btn-bg: #00c6ff;
+      --btn-hover: #0072ff;
+      --result-bg: rgba(255, 255, 255, 0.05);
+    }
+
+    [data-theme="light"] {
+      --bg: #f9f9f9;
+      --fg: #111;
+      --btn-bg: #0072ff;
+      --btn-hover: #0052cc;
+      --result-bg: #e3e3e3;
+    }
+
     body {
-      background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+      background: var(--bg);
+      color: var(--fg);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: white;
       text-align: center;
       padding: 20px;
+      transition: background 0.5s, color 0.5s;
     }
 
     .container {
       max-width: 400px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.05);
       padding: 30px;
       border-radius: 16px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      background: var(--result-bg);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     }
 
     input, button {
@@ -33,22 +50,24 @@
     }
 
     button {
-      background: #00c6ff;
+      background: var(--btn-bg);
       color: white;
       cursor: pointer;
+      transition: background 0.3s;
     }
 
     button:hover {
-      background: #0072ff;
+      background: var(--btn-hover);
     }
 
     #result {
       margin-top: 20px;
       white-space: pre-line;
       text-align: left;
-      background: rgba(0, 0, 0, 0.3);
+      background: var(--result-bg);
       padding: 15px;
       border-radius: 12px;
+      min-height: 100px;
     }
 
     #loading {
@@ -80,21 +99,43 @@
     #copyBtn:hover {
       background: #666;
     }
+
+    #themeToggle {
+      margin-top: 10px;
+      background: #888;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Magic Mall MLBB ID Checker V1</h2>
+    <h2>Magic Mall MLBB ID Checker V2</h2>
     <input type="text" id="idInput" placeholder="Enter MLBB ID">
     <input type="text" id="serverInput" placeholder="Enter Server">
     <button onclick="checkMLID()">စစ်ဆေးမည်။</button>
-
     <div id="loading"><div class="spinner"></div></div>
     <div id="result"></div>
     <button id="copyBtn" onclick="copyResult()">📋 Copy Result</button>
+    <button id="themeToggle" onclick="toggleTheme()">🌗 Toggle Dark/Light</button>
   </div>
 
   <script>
+    let currentTheme = 'dark';
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+    }
+
+    function typeText(element, text, delay = 30) {
+      element.textContent = "";
+      let i = 0;
+      const typer = setInterval(() => {
+        element.textContent += text.charAt(i);
+        i++;
+        if (i >= text.length) clearInterval(typer);
+      }, delay);
+    }
+
     async function checkMLID() {
       const id = document.getElementById("idInput").value.trim();
       const server = document.getElementById("serverInput").value.trim();
@@ -116,7 +157,7 @@
         loading.style.display = "none";
 
         if (json.error || !json.data) {
-          result.textContent = "❌ Account not found.";
+          typeText(result, "❌ Account not found.");
           return;
         }
 
@@ -129,24 +170,29 @@
 
         message += `\n💎 Shop Events\n`;
 
+        let foundDouble = false;
+
         if (data.shop_events && data.shop_events.length > 0) {
           data.shop_events.forEach(event => {
             if (event.title.toLowerCase().includes("double diamonds")) {
+              foundDouble = true;
               message += `\n${event.title}\n`;
               event.goods.forEach(good => {
-                const status = good.game_can_buy ? "ရပါသေးတယ်" : "မရတော့ပါ";
+                const status = good.game_can_buy ? "🟢ရပါသေးတယ်" : "🔴မရတော့ပါ";
                 message += `${good.title} - ${status}\n`;
               });
             }
           });
-        } else {
+        }
+
+        if (!foundDouble) {
           message += "မရှိပါ။\n";
         }
 
-        result.textContent = message;
+        typeText(result, message);
       } catch (error) {
         loading.style.display = "none";
-        result.textContent = "🚫 Server error. Please try again later.";
+        typeText(result, "🚫 Server error. Please try again later.");
       }
     }
 
