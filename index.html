@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Magic Mall MLBB ID Checker V2</title>
+  <title>Magic Mall MLBB ID Checker V1</title>
   <style>
     :root {
       --bg: #0f2027;
@@ -100,22 +100,74 @@
       background: #666;
     }
 
-    #themeToggle {
-      margin-top: 10px;
-      background: #888;
+    /* Toggle Switch Style */
+    .switch-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #00c6ff;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Magic Mall MLBB ID Checker V2</h2>
+    <h2>Magic Mall MLBB ID Checker V1</h2>
     <input type="text" id="idInput" placeholder="Enter MLBB ID">
     <input type="text" id="serverInput" placeholder="Enter Server">
     <button onclick="checkMLID()">စစ်ဆေးမည်။</button>
     <div id="loading"><div class="spinner"></div></div>
     <div id="result"></div>
     <button id="copyBtn" onclick="copyResult()">📋 Copy Result</button>
-    <button id="themeToggle" onclick="toggleTheme()">🌗 Toggle Dark/Light</button>
+
+    <div class="switch-container">
+      <label class="switch">
+        <input type="checkbox" onchange="toggleTheme()" id="themeSwitch">
+        <span class="slider"></span>
+      </label>
+    </div>
   </div>
 
   <script>
@@ -157,7 +209,7 @@
         loading.style.display = "none";
 
         if (json.error || !json.data) {
-          typeText(result, "❌ Account not found.");
+          typeText(result, "❌ Account မတွေ့ပါ😢.");
           return;
         }
 
@@ -201,11 +253,17 @@
       if (!result) return;
 
       navigator.clipboard.writeText(result).then(() => {
-        alert("📋 မိတ္တူယူပြီးပါပြီ။");
+        alert("📋 Copyယူပြီးပါပြီ။");
       }).catch(() => {
-        alert("❌ မိတ္တူမယူနိုင်ပါ။");
+        alert("❌ Copyမယူနိုင်ပါ။");
       });
     }
+
+    // Set default theme to dark on load
+    document.addEventListener("DOMContentLoaded", () => {
+      document.documentElement.setAttribute("data-theme", "dark");
+      document.getElementById("themeSwitch").checked = false;
+    });
   </script>
 </body>
 </html>
