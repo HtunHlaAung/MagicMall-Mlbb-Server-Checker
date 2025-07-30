@@ -161,15 +161,12 @@
   color: #fff;
 }
 
-/* History text colors */
-#historyList {
-  font-size: 14px;
-  margin-top: 20px;
-  color: #000;
+body[data-theme="light"] #historyList {
+  color: #444;
 }
 
-[data-theme="dark"] #historyList {
-  color: #fff;
+body[data-theme="dark"] #historyList {
+  color: #ccc;
 }
   </style>
 </head>
@@ -194,7 +191,7 @@
 
     <div id="loading"><div class="spinner"></div></div>
     <div id="result"></div>
-<div id="historyList" style="margin-top:20px; font-size:14px; color:#444;"></div>
+<div id="historyList" style="margin-top:20px; font-size:14px;"></div>
     <button class="copy-button" onclick="copyResult()">📋 Copyကူးမည်</button>
   </div>
 
