@@ -230,7 +230,7 @@
     const container = document.getElementById("historyList");
     container.innerHTML = "";
     if (history.length > 0) {
-      container.innerHTML = "<h4>🔁 ရှာဖွေမှုမှတ်တမ်း:</h4><ul style='text-align:left; padding-left:20px;'>";
+      container.innerHTML = "<h4>🔁 History</h4><ul style='text-align:left; padding-left:20px;'>";
       history.forEach(h => {
         container.innerHTML += `<li>${h}</li>`;
       });
