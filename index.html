@@ -524,21 +524,26 @@ window.addEventListener("load", () => {
     "ZM": "Zambia", "ZW": "Zimbabwe"
   };
 
-  function getFlagEmoji(code) {
-    return code.toUpperCase().replace(/./g, char =>
-      String.fromCodePoint(127397 + char.charCodeAt())
-    );
-  }
+   function getFlagEmoji(code) {
+      return code.toUpperCase().replace(/./g, char =>
+        String.fromCodePoint(127397 + char.charCodeAt())
+      );
+    }
 
-  function showCountryInfo(countryCode) {
-    const flag = getFlagEmoji(countryCode);
-    const name = countryMap[countryCode.toUpperCase()] || "Unknown Country";
-    const container = document.getElementById("countryInfo");
-    container.innerText = `နိုင်ငံ: ${flag} ${name}`;
-  }
+    function enhanceCountryInResult() {
+      const resultEl = document.getElementById("result");
+      if (!resultEl) return;
 
-  // Example usage: call this with the country code from your API response
-  // For example: showCountryInfo("MM");
+      let text = resultEl.innerText;
+
+      text = text.replace(/နိုင်ငံ: (\w{2})/, (match, code) => {
+        const name = countryMap[code.toUpperCase()] || code;
+        const flag = getFlagEmoji(code);
+        return `နိုင်ငံ: ${flag} ${name}`;
+      });
+
+      resultEl.innerText = text;
+    }
 </script>
 </body>
 </html>
