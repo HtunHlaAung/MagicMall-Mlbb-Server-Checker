@@ -354,25 +354,31 @@ const countryMap = {
   "ZM": "Zambia", "ZW": "Zimbabwe"
 };
 
-// ✅ Convert country code to flag + full name
-function formatCountry(code) {
-  const name = countryMap[code.toUpperCase()] || code;
-  const flag = code.toUpperCase().replace(/./g, c => String.fromCodePoint(127397 + c.charCodeAt()));
-  return `နိုင်ငံ: ${flag} ${name}`;
+function getFlagEmoji(code) {
+  return code.replace(/./g, char => 
+    String.fromCodePoint(127397 + char.charCodeAt())
+  );
 }
 
-// ✅ Replace raw region in result
+// Wait a bit for result to load
 setTimeout(() => {
   const resultEl = document.getElementById("result");
-  if (resultEl) {
-    const match = resultEl.innerText.match(/နိုင်ငံ: (\w{2})/);
-    if (match) {
-      const code = match[1];
-      const full = formatCountry(code);
-      resultEl.innerHTML = resultEl.innerHTML.replace(`နိုင်ငံ: ${code}`, full);
-    }
+  if (!resultEl) return;
+
+  // Match "နိုင်ငံ: XX"
+  const regex = /နိုင်ငံ: (\b[A-Z]{2}\b)/;
+  const match = resultEl.innerText.match(regex);
+
+  if (match) {
+    const code = match[1];
+    const name = countryMap[code] || code;
+    const flag = getFlagEmoji(code);
+    const full = `နိုင်ငံ: ${flag} ${name}`;
+    
+    resultEl.innerHTML = resultEl.innerHTML.replace(`နိုင်ငံ: ${code}`, full);
   }
-}, 500); // Adjust if your response takes longer
+}, 600); // Delay to wait for data to be inserted
+</script>
 </script>
     <!-- Your footer, popup etc. can remain unchanged below -->
 <footer style="margin-top:60px; padding:30px 20px; background:linear-gradient(135deg, #00c6ff, #0072ff); color:white; text-align:center; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow:0 -8px 25px rgba(0,0,0,0.3); font-family:'Segoe UI', sans-serif; animation:glow 4s infinite alternate;">
